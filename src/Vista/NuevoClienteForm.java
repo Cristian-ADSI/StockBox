@@ -33,7 +33,7 @@ public class NuevoClienteForm extends javax.swing.JFrame {
             ob[1] = nombre;
             ob[2] = direccion;
             ob[3] = estado;
-            cdao.Crear(ob);
+            cdao.Create(ob);
         } else {
             JOptionPane.showMessageDialog(this, "Operacion Cancelada");
         }
@@ -193,7 +193,7 @@ public class NuevoClienteForm extends javax.swing.JFrame {
     }//GEN-LAST:event_topPanelMousePressed
 
     private void btnCrearCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearCActionPerformed
-        PrincipalForm pf = new PrincipalForm();
+        Application pf = new Application();
         CrearC();
         pf.LimpiarTablaC();
         pf.ListarC();      

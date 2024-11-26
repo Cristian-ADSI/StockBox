@@ -39,7 +39,7 @@ public class ClienteDAO implements CRUD {
     }
     
     @Override
-    public List Listar() {
+    public List Read() {
         List<EntidadCliente> lista = new ArrayList<>();
         String sql = "SELECT * FROM clientes";
         try {
@@ -63,7 +63,7 @@ public class ClienteDAO implements CRUD {
     }
 
     @Override
-    public int Crear(Object[] ob) {
+    public int Create(Object[] ob) {
         int r = 0;
         String sql = "INSERT INTO clientes(Cedula, Nombre, Direccion, Estado) VALUES(?,?,?,?)";
         try {
@@ -84,7 +84,7 @@ public class ClienteDAO implements CRUD {
     }
 
     @Override
-    public int Actualizar(Object[] ob) {
+    public int Update(Object[] ob) {
         int r = 0;
         String sql = "UPDATE clientes SET Cedula=?, Nombre=?, Direccion=?, Estado=? WHERE Id_Cliente=?";
         try {

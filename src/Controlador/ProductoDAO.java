@@ -55,7 +55,7 @@ public class ProductoDAO implements CRUD {
     }
 
     @Override
-    public List Listar() {
+    public List Read() {
         List<EntidadProducto> lista = new ArrayList<>();
         String sql = "SELECT * FROM productos";
         try {
@@ -79,7 +79,7 @@ public class ProductoDAO implements CRUD {
     }
 
     @Override
-    public int Crear(Object[] ob) {
+    public int Create(Object[] ob) {
         int r = 0;
         String sql = "INSERT INTO productos (Nombre, Precio,Stock,Estado)VALUES(?,?,?,?)";
 
@@ -101,7 +101,7 @@ public class ProductoDAO implements CRUD {
     }
 
     @Override
-    public int Actualizar(Object[] ob) {
+    public int Update(Object[] ob) {
         int r = 0;
         String sql = "UPDATE productos SET Nombre=?, Precio=?, Stock=?, Estado=? WHERE Id_Producto=?";
         try {

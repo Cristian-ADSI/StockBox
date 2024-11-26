@@ -7,7 +7,7 @@ package Vista;
 
 import Controlador.VentasDAO;
 import Modelos.EntidadDetalleVenta;
-import Modelos.EntidadVendedor;
+import Modelos.EntidadUsuario;
 import Modelos.EntidadVenta;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -44,7 +44,7 @@ public class CobroForm extends javax.swing.JFrame {
     float precio;
     String estadoD;
 
-    PrincipalForm pf = new PrincipalForm();
+    Application pf = new Application();
 
     public CobroForm() {
         initComponents();
