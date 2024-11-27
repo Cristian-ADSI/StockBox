@@ -8,15 +8,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import Modelos.EntidadUsuario;
 import Vista.Mensaje;
 
 public class UsuarioDAO implements CRUD {
 
     Conexion conexion           = new Conexion();
-    EntidadUsuario entUsuario   = new EntidadUsuario();
     Mensaje message             = new Mensaje();
 
     PreparedStatement prepStatement;
@@ -26,6 +23,7 @@ public class UsuarioDAO implements CRUD {
 
     public EntidadUsuario getUserData(String DNI, String user) {
 
+        EntidadUsuario entUsuario   = new EntidadUsuario();
         String SQLQuery = "SELECT * FROM usuarios WHERE DNI=? AND Usuario=? ";
 
         try {
@@ -55,6 +53,7 @@ public class UsuarioDAO implements CRUD {
     @Override
     public List Read() {
         
+        EntidadUsuario entUsuario   = new EntidadUsuario();
         List<EntidadUsuario> usersList = new ArrayList<>();
         
         String SQLQuery = "SELECT * FROM usuarios";

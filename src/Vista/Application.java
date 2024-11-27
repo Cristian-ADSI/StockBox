@@ -284,7 +284,7 @@ public class Application extends javax.swing.JFrame {
         modeloP = (DefaultTableModel) tblProductos.getModel();
         Object[] ob = new Object[5];
         for (int i = 0; i < lista.size(); i++) {
-            ob[0] = lista.get(i).getId_Producto();
+            ob[0] = lista.get(i).getIdProducto();
             ob[1] = lista.get(i).getNombre();
             ob[2] = lista.get(i).getPrecio();
             ob[3] = lista.get(i).getStock();
@@ -388,8 +388,8 @@ public class Application extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Debe Ingresar el Codigo del Producto");
         } else {
             id_Porducto = Integer.parseInt(txtCodProducto.getText());
-            ep = pdao.BuscarProducto(id_Porducto);
-            if (ep.getId_Producto() != 0) {
+            ep = pdao.searchProduct(id_Porducto);
+            if (ep.getIdProducto() != 0) {
                 txtProducto.setText(ep.getNombre());
                 txtPrecio.setText("$" + ep.getPrecio());
                 txtStock.setText(String.valueOf(ep.getStock()));
@@ -415,7 +415,7 @@ public class Application extends javax.swing.JFrame {
         float total;
         modeloDV = (DefaultTableModel) tblDVentas.getModel();
         nro = nro + 1;
-        int Id_Producto = ep.getId_Producto();
+        int Id_Producto = ep.getIdProducto();
         String nombre = ep.getNombre();
         cantidad = Integer.parseInt(spnCantidad.getValue().toString());
         precio = ep.getPrecio();
@@ -543,9 +543,9 @@ public class Application extends javax.swing.JFrame {
             id_Porducto = Integer.parseInt(tblDVentas.getValueAt(i, 1).toString());
             cantidad = Integer.parseInt(tblDVentas.getValueAt(i, 3).toString());
             EntidadProducto ep = new EntidadProducto();
-            ep = pdao.BuscarProducto(id_Porducto);
+            ep = pdao.searchProduct(id_Porducto);
             int stock = ep.getStock() - cantidad;
-            pdao.ActualizarStock(stock, id_Porducto);
+            pdao.StockUpdate(stock, id_Porducto);
         }
     }
 

@@ -56,12 +56,49 @@ public class Mensaje {
 
     public void userUpdateFailed() {
 
-        JOptionPane.showMessageDialog(null, "No se pudo actualizar el usuario");
+        JOptionPane.showMessageDialog(null, "No se pudo actualizar el usuario, error a nivel de sistema");
     }
 
     public void userDeleteFailed() {
 
-        JOptionPane.showMessageDialog(null, "No se pudo eliminar el usuario");
+        JOptionPane.showMessageDialog(null, "No se pudo eliminar el usuario, error a nivel de sistema");
+    }
+
+    public void productCreatedSuccessfully() {
+        JOptionPane.showMessageDialog(null, "Porducto creado  correctamente");
+    }
+
+    public void productUpdatedSuccessfully() {
+        JOptionPane.showMessageDialog(null, "Porducto actualizado  correctamente");
+    }
+
+    public void productDeletedSuccessfully() {
+        JOptionPane.showMessageDialog(null, "Porducto eliminado  correctamente");
+    }
+
+    public void productCreateFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo cerar el producto, error a nivel de sistema");
+    }
+
+    public void productUpdateFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo actualizar el producto, error a nivel de sistema");
+    }
+
+    public void stockUpdateFailed() {
+
+        JOptionPane.showMessageDialog(null, "No se pudo actualizar el Stock, error a nivel de sistema");
+    }
+
+    public void searchProductFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo encontrar el producto, error a nivel de sistema");
+    }
+
+    public void productReadFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo cargar los productos, error a nivel de sistema");
+    }
+    
+     public void productDeleteFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo eliminar el producto, error a nivel de sistema");
     }
 
 }
