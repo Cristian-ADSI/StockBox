@@ -2,12 +2,12 @@ package Vista;
 
 import Controlador.ClienteDAO;
 import Controlador.ProductoDAO;
-import Controlador.VendedorDAO;
+import Controlador.UsuarioDAO;
 import Controlador.VentasDAO;
 import Modelos.EntidadCliente;
 import Modelos.EntidadDetalleVenta;
 import Modelos.EntidadProducto;
-import Modelos.EntidadVendedor;
+import Modelos.EntidadUsuario;
 import Modelos.EntidadVenta;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -20,11 +20,11 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
-public class PrincipalForm extends javax.swing.JFrame {
+public class Application extends javax.swing.JFrame {
 
     //==========Instancias de Clases=========//
-    EntidadVendedor ev = new EntidadVendedor();
-    VendedorDAO vdao = new VendedorDAO();
+    EntidadUsuario ev = new EntidadUsuario();
+    UsuarioDAO vdao = new UsuarioDAO();
     DefaultTableModel modeloV = new DefaultTableModel();
 
     EntidadCliente ec = new EntidadCliente();
@@ -42,7 +42,7 @@ public class PrincipalForm extends javax.swing.JFrame {
     VentasDAO vendao = new VentasDAO();
     //==========Variables para el Panel de Ventas========
     int id_Porducto;
-    int id_Usuario;
+    String id_Usuario;
     int nro = 0;
     float tPagar;
     int cantidad;
@@ -65,7 +65,7 @@ public class PrincipalForm extends javax.swing.JFrame {
     int Y;
 
     //====Metodo Constructor
-    public PrincipalForm() {
+    public Application() {
         initComponents();
         this.setLocationRelativeTo(null);
         btnClose.setBackground(new java.awt.Color(0, 0, 0, 0));
@@ -88,16 +88,16 @@ public class PrincipalForm extends javax.swing.JFrame {
     }
 
     void ListarV() {
-        List<EntidadVendedor> lista = vdao.Listar();
+        List<EntidadUsuario> lista = vdao.Read();
         modeloV = (DefaultTableModel) tblColaboradores.getModel();
         Object[] ob = new Object[6];
         for (int i = 0; i < lista.size(); i++) {
-            ob[0] = lista.get(i).getId_Vendedor();
-            ob[1] = lista.get(i).getCedula();
+            ob[0] = lista.get(i).getIdUsuario();
+            ob[1] = lista.get(i).getDNI();
             ob[2] = lista.get(i).getNombre();
             ob[3] = lista.get(i).getTelefono();
-            ob[4] = lista.get(i).getEstado();
-            ob[5] = lista.get(i).getUser_2();
+            ob[4] = lista.get(i).getStatus();
+            ob[5] = lista.get(i).getUsuario();
 
             modeloV.addRow(ob);
         }
@@ -127,7 +127,7 @@ public class PrincipalForm extends javax.swing.JFrame {
             obj[2] = telefono;
             obj[3] = estado;
             obj[4] = usuario;
-            vdao.Crear(obj);
+            vdao.Create(obj);
         } else {
             JOptionPane.showMessageDialog(this, "Operacion Cancelada");
         }
@@ -155,7 +155,7 @@ public class PrincipalForm extends javax.swing.JFrame {
                 ob[3] = estado;
                 ob[4] = usuario;
                 ob[5] = id_vend;
-                vdao.Actualizar(ob);
+                vdao.Update(ob);
             } else {
                 JOptionPane.showMessageDialog(this, "Operacion Cancelada");
             }
@@ -187,7 +187,7 @@ public class PrincipalForm extends javax.swing.JFrame {
     }
 
     void ListarC() {
-        List<EntidadCliente> lista = cdao.Listar();
+        List<EntidadCliente> lista = cdao.Read();
         modeloC = (DefaultTableModel) tblCliente.getModel();
         Object[] ob = new Object[5];
         for (int i = 0; i < lista.size(); i++) {
@@ -221,7 +221,7 @@ public class PrincipalForm extends javax.swing.JFrame {
             ob[1] = nombre;
             ob[2] = direccion;
             ob[3] = estado;
-            cdao.Crear(ob);
+            cdao.Create(ob);
         } else {
             JOptionPane.showMessageDialog(this, "Operacion Cancelada");
         }
@@ -247,7 +247,7 @@ public class PrincipalForm extends javax.swing.JFrame {
                 ob[2] = direccion;
                 ob[3] = estado;
                 ob[4] = id_clien;
-                cdao.Actualizar(ob);
+                cdao.Update(ob);
                 JOptionPane.showMessageDialog(this, "Registro Actualizado Correctamente");
             } else {
                 JOptionPane.showMessageDialog(this, "Operacion Cancelada");
@@ -280,11 +280,11 @@ public class PrincipalForm extends javax.swing.JFrame {
     }
 
     void ListarP() {
-        List<EntidadProducto> lista = pdao.Listar();
+        List<EntidadProducto> lista = pdao.Read();
         modeloP = (DefaultTableModel) tblProductos.getModel();
         Object[] ob = new Object[5];
         for (int i = 0; i < lista.size(); i++) {
-            ob[0] = lista.get(i).getId_Producto();
+            ob[0] = lista.get(i).getIdProducto();
             ob[1] = lista.get(i).getNombre();
             ob[2] = lista.get(i).getPrecio();
             ob[3] = lista.get(i).getStock();
@@ -314,7 +314,7 @@ public class PrincipalForm extends javax.swing.JFrame {
             ob[1] = precio;
             ob[2] = stock;
             ob[3] = estado;
-            pdao.Crear(ob);
+            pdao.Create(ob);
         } else {
             JOptionPane.showMessageDialog(this, "Operacion Cancelada");
         }
@@ -339,7 +339,7 @@ public class PrincipalForm extends javax.swing.JFrame {
                 ob[2] = stock;
                 ob[3] = estado;
                 ob[4] = id_prod;
-                pdao.Actualizar(ob);
+                pdao.Update(ob);
                 JOptionPane.showMessageDialog(this, "Registro Actualizado Correctamente");
             } else {
                 JOptionPane.showMessageDialog(this, "Operacion Cancelada");
@@ -388,8 +388,8 @@ public class PrincipalForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Debe Ingresar el Codigo del Producto");
         } else {
             id_Porducto = Integer.parseInt(txtCodProducto.getText());
-            ep = pdao.BuscarProducto(id_Porducto);
-            if (ep.getId_Producto() != 0) {
+            ep = pdao.searchProduct(id_Porducto);
+            if (ep.getIdProducto() != 0) {
                 txtProducto.setText(ep.getNombre());
                 txtPrecio.setText("$" + ep.getPrecio());
                 txtStock.setText(String.valueOf(ep.getStock()));
@@ -415,7 +415,7 @@ public class PrincipalForm extends javax.swing.JFrame {
         float total;
         modeloDV = (DefaultTableModel) tblDVentas.getModel();
         nro = nro + 1;
-        int Id_Producto = ep.getId_Producto();
+        int Id_Producto = ep.getIdProducto();
         String nombre = ep.getNombre();
         cantidad = Integer.parseInt(spnCantidad.getValue().toString());
         precio = ep.getPrecio();
@@ -513,7 +513,7 @@ public class PrincipalForm extends javax.swing.JFrame {
         }
     }
 
-    void asignarvendedor(String idvendedor, String role, int idUsuario) {
+    void asignarvendedor(String idvendedor, String role, String idUsuario) {
         txtColaborador.setText(String.valueOf(idUsuario));
         id_Usuario = idUsuario;
         txtRole.setText(role);
@@ -543,9 +543,9 @@ public class PrincipalForm extends javax.swing.JFrame {
             id_Porducto = Integer.parseInt(tblDVentas.getValueAt(i, 1).toString());
             cantidad = Integer.parseInt(tblDVentas.getValueAt(i, 3).toString());
             EntidadProducto ep = new EntidadProducto();
-            ep = pdao.BuscarProducto(id_Porducto);
+            ep = pdao.searchProduct(id_Porducto);
             int stock = ep.getStock() - cantidad;
-            pdao.ActualizarStock(stock, id_Porducto);
+            pdao.StockUpdate(stock, id_Porducto);
         }
     }
 
@@ -1525,21 +1525,23 @@ public class PrincipalForm extends javax.swing.JFrame {
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Application.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Application.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Application.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Application.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PrincipalForm().setVisible(true);
+                new Application().setVisible(true);
             }
         });
     }

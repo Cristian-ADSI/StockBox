@@ -3,7 +3,7 @@ package Modelos;
 
 
 public class EntidadProducto {
-    int Id_Producto;
+    int IdProducto;
     String Nombre;
     float Precio;
     int Stock;
@@ -13,19 +13,19 @@ public class EntidadProducto {
     }
 
     public EntidadProducto(int Id_Producto, String Nombre, float Precio, int Stock, String Estado) {
-        this.Id_Producto = Id_Producto;
+        this.IdProducto = Id_Producto;
         this.Nombre = Nombre;
         this.Precio = Precio;
         this.Stock = Stock;
         this.Estado = Estado;
     }
 
-    public int getId_Producto() {
-        return Id_Producto;
+    public int getIdProducto() {
+        return IdProducto;
     }
 
-    public void setId_Producto(int Id_Producto) {
-        this.Id_Producto = Id_Producto;
+    public void setIdProducto(int Id_Producto) {
+        this.IdProducto = Id_Producto;
     }
 
     public String getNombre() {

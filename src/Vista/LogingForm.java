@@ -1,21 +1,72 @@
 package Vista;
 
-import Controlador.VendedorDAO;
-import Modelos.EntidadVendedor;
-import java.awt.Color;
-import javax.swing.JOptionPane;
+import Controlador.UsuarioDAO;
+import Modelos.EntidadUsuario;
 import java.awt.MouseInfo;
 import java.awt.Point;
 
 public class LogingForm extends javax.swing.JFrame {
-
-    VendedorDAO vdao = new VendedorDAO();
-    EntidadVendedor ev = new EntidadVendedor();
+    
+    UsuarioDAO usrDAO           = new UsuarioDAO();
+    EntidadUsuario entUsuario   = new EntidadUsuario();
+    Mensaje message             = new Mensaje();
+    
     private int X;
     private int Y;
-
+    
     public LogingForm() {
         initComponents();
+        setConfigurations();
+    }
+    
+    public void login() {
+        String passwordInput  = txtPassword.getText();
+        String userInput = txtUser.getText();
+        
+        boolean invalidUser;
+        boolean invalidStatus;
+        
+        if (this.checktemptyFields(passwordInput, userInput)) {
+            
+            message.emptyFields(this);
+            txtUser.requestFocus();
+        } else {
+
+            //Get User Data from DB
+            String[] userData   = getUserData(passwordInput, userInput);
+            String idUser       = userData[0];
+            String DNI       = userData[0];
+            String status       = userData[4];
+            String user         = userData[5];
+            String role         = userData[6];
+            
+
+            //Cehck User data
+            invalidUser     = checkInvalidUser(DNI, user);
+            invalidStatus   = checkInvalidStatus(status, role);
+            
+            if (invalidUser) {
+                
+                message.invalidUSer(this);
+                txtUser.requestFocus();
+            } else if (invalidStatus) {
+                
+                message.invalidStatus(this, status, role);
+                txtUser.requestFocus();
+            } else {
+                
+                Application App = new Application();
+                message.LoginSuccesfully(this, role);
+                
+                App.setVisible(true);
+                App.asignarvendedor(DNI, role, idUser);
+                dispose();
+            }
+        }
+    }
+    
+    private void setConfigurations() {
+        
         pnlTopPanel.setBackground(new java.awt.Color(0, 0, 0, 0));
         btnClose.setBackground(new java.awt.Color(0, 0, 0, 0));
         btnMinimize.setBackground(new java.awt.Color(0, 0, 0, 0));
@@ -25,42 +76,65 @@ public class LogingForm extends javax.swing.JFrame {
         txtPassword.setText("123456");
         this.setLocationRelativeTo(null);
     }
-
-    public void Validar() {
-        String cedula = txtPassword.getText();
-        String user = txtUser.getText();
-        String role = "";
-        String estado = "";
-        int Id_Usuario;
-        if (txtUser.getText().equals("") || txtPassword.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "No debe Dejar Campos Vacios");
-            txtUser.requestFocus();
-        } else {
-            ev = vdao.ValidarVendedor(cedula, user);
-            Id_Usuario = ev.getId_Vendedor();
-            estado = ev.getEstado();
-            role = ev.getRole();
-            if (ev.getUser_2() != null && ev.getCedula() != null) {
-                if (estado.equals("Inactivo") || role.equals("No asignado")) {
-                    JOptionPane.showMessageDialog(this, "El usuario que intenta usar se encuentra inactivo o no ha sido asignado\n"
-                            + "para mas informacion pongase en contacto con el administrdor del sistema");
-                    JOptionPane.showMessageDialog(this, "role " + role + "\nEstado " + estado);
-                } else {
-
-                    PrincipalForm p = new PrincipalForm();
-                    JOptionPane.showMessageDialog(this, "Login Exitoso \nAcceso como " + role);
-
-                    p.setVisible(true);
-                    p.asignarvendedor(cedula, role,Id_Usuario);
-                    dispose();
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Debe Ingresar Usuarios Validos");
-                txtUser.requestFocus();
-            }
-        }
+    
+    private String[] getUserData(String passwordInput, String userInput) {
+        
+        entUsuario = usrDAO.getUserData(passwordInput, userInput);
+        
+        String[] userData = {
+            entUsuario.getIdUsuario() + "", //Posicion 0
+            entUsuario.getDNI(),//Posicion 1
+            entUsuario.getNombre(),//Posicion 2
+            entUsuario.getTelefono(),//Posicion 3
+            entUsuario.getStatus(), //Posicion 4
+            entUsuario.getUsuario(), //Posicion 5
+            entUsuario.getRole() //Posicion 6
+        };
+        
+        return userData;
     }
+    
+    private boolean checktemptyFields(String password, String user) {
+        
+        boolean EmptyFields = false;
+        if (password.isEmpty() || user.isEmpty()) {
+            EmptyFields = true;
+        }
+        
+        return EmptyFields;
+    }
+    
+    private boolean checkInvalidUser(String DNI, String user) {
+        boolean emptyUser = false;
+        
+        if (DNI == null || user == null) {
+            emptyUser = true;
+        }
+        return emptyUser;
+    }
+    
+    private boolean checkInvalidStatus(String status, String role) {
+        
+        boolean invalidStatus = false;
 
+        //this Condional is created to handle cases when status and role are null
+        //cause equals() doesn't acept null values 
+        if (status == null) {
+            status = "Usuario no existente";
+            role = "Role no existente";
+        }
+        
+        if (status.equals("Inactivo") || role.equals("No asignado")) {
+            invalidStatus = true;
+        }
+        
+        if (status.equals("Usuario no existente")) {
+            invalidStatus = true;
+        }
+        
+        return invalidStatus;
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -181,7 +255,7 @@ public class LogingForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectActionPerformed
-        Validar();
+        login();
     }//GEN-LAST:event_btnConectActionPerformed
 
     private void btnMinimizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMinimizeActionPerformed
@@ -202,7 +276,7 @@ public class LogingForm extends javax.swing.JFrame {
         setLocation(point.x - X, point.y - Y);
 
     }//GEN-LAST:event_pnlTopPanelMouseDragged
-
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

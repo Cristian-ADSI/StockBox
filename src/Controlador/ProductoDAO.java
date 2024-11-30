@@ -1,136 +1,178 @@
 package Controlador;
 
-import Modelos.EntidadProducto;
 import java.sql.Connection;
-import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
+
+import Vista.Mensaje;
+import Modelos.EntidadProducto;
 
 public class ProductoDAO implements CRUD {
 
-    Connection con;
-    Conexion cn = new Conexion();
-    PreparedStatement ps;
-    ResultSet rs;
-    int r;
-    
-    public int ActualizarStock(int stock, int idproducto){
-        String sql ="UPDATE productos SET Stock=? where Id_Producto =?";
+    Conexion conexion           = new Conexion();
+    Mensaje message             = new Mensaje();
+
+    Connection connection       = conexion.Conectar();
+    PreparedStatement prepStatement;
+    ResultSet resSet;
+
+
+    public void StockUpdate(int stock, int idProduct) {
+
+        String SQLQuery = "UPDATE productos SET Stock=? where IdProducto =?";
+        
         try {
-            con=cn.Conectar();
-            ps=con.prepareStatement(sql);
-            ps.setInt(1, stock);
-            ps.setInt(2, idproducto);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "No se pudo ACtualizar el Stock");
-            System.err.println(e);
+            
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setInt(1, stock);
+            prepStatement.setInt(2, idProduct);
+            
+            prepStatement.executeUpdate();
+            
+        } catch (SQLException error) {
+
+            String text = "Error en el metodo ProductoDAO.StockUpdate";
+            message.errorInSQLQuery(text, error);
+            message.stockUpdateFailed();
         }
-        return r;
     }
 
-    public EntidadProducto BuscarProducto(int Id_Producto) {
-        EntidadProducto ep = new EntidadProducto();
-        String sql = "SELECT * FROM productos WHERE Id_Producto=?";
+    public EntidadProducto searchProduct(int idProducto) {
+
+        EntidadProducto entProduct  = new EntidadProducto();
+        String SQLQuery             = "SELECT * FROM productos WHERE IdProducto=?";
+
         try {
-            con=cn.Conectar();
-            ps=con.prepareStatement(sql);
-            ps.setInt(1, Id_Producto);
-            rs=ps.executeQuery();
-            while (rs.next()) {
-                ep.setId_Producto(rs.getInt(1));
-                ep.setNombre(rs.getString(2));
-                ep.setPrecio(rs.getFloat(3));
-                ep.setStock(rs.getInt(4));
-                ep.setEstado(rs.getString(5));
+
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setInt(1, idProducto);
+
+            resSet = prepStatement.executeQuery();
+
+            while (resSet.next()) {
+                
+                entProduct.setIdProducto(resSet.getInt  (1));
+                entProduct.setNombre(resSet.getString   (2));
+                entProduct.setPrecio(resSet.getFloat    (3));
+                entProduct.setStock(resSet.getInt       (4));
+                entProduct.setEstado(resSet.getString   (5));
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Eror en el Metodo Buscar Cliente");
-            System.err.println(e);
+        } catch (SQLException error) {
+        
+            String text = "Eror en el Metodo ProductoDAO.searchProduct";
+            message.errorInSQLQuery(text, error);
+            message.searchProductFailed();
         }
-        return ep;
+
+        return entProduct;
     }
 
     @Override
-    public List Listar() {
-        List<EntidadProducto> lista = new ArrayList<>();
-        String sql = "SELECT * FROM productos";
+    public List Read() {
+
+        EntidadProducto entProduct          = new EntidadProducto();
+        List<EntidadProducto> productList   = new ArrayList<>();
+        String SQLQuery                     = "SELECT * FROM productos";
+        
         try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                EntidadProducto ep = new EntidadProducto();
-                ep.setId_Producto(rs.getInt(1));
-                ep.setNombre(rs.getString(2));
-                ep.setPrecio(rs.getFloat(3));
-                ep.setStock(rs.getInt(4));
-                ep.setEstado(rs.getString(5));
-                lista.add(ep);
+            prepStatement = connection.prepareStatement(SQLQuery);
+            resSet = prepStatement.executeQuery();
+            
+            while (resSet.next()) {
+                
+                entProduct.setIdProducto(resSet.getInt  (1));
+                entProduct.setNombre(resSet.getString   (2));
+                entProduct.setPrecio(resSet.getFloat    (3));
+                entProduct.setStock(resSet.getInt       (4));
+                entProduct.setEstado(resSet.getString   (5));
+                
+                productList.add(entProduct);
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Eror en el Metodo Listar");
-            System.err.println(e);
+        } catch (SQLException error) {
+            
+            String text = "Eror en el Metodo ProductoDAO.Read";
+            message.errorInSQLQuery(text, error);
+            message.productReadFailed();
         }
-        return lista;
+        return productList;
     }
 
     @Override
-    public int Crear(Object[] ob) {
-        int r = 0;
-        String sql = "INSERT INTO productos (Nombre, Precio,Stock,Estado)VALUES(?,?,?,?)";
+    public int Create(Object[] ob) {
+        
+        int result      = 0;
+        String SQLQuery = "INSERT INTO productos (Nombre, Precio,Stock,Estado)VALUES(?,?,?,?)";
 
         try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            ps.setObject(1, ob[0]);
-            ps.setObject(2, ob[1]);
-            ps.setObject(3, ob[2]);
-            ps.setObject(4, ob[3]);
-            r = ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Registro Creado Correctamente");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "No se pudo crear el registro verificar \n La longitud de los campos\n"
-                    + "Que no tenca campos vacios \n El tipo dato ingresado");
-            System.err.println(e);
+            prepStatement = connection.prepareStatement(SQLQuery);
+            
+            prepStatement.setObject(1, ob[0]);
+            prepStatement.setObject(2, ob[1]);
+            prepStatement.setObject(3, ob[2]);
+            prepStatement.setObject(4, ob[3]);
+            
+            result = prepStatement.executeUpdate();
+            
+            message.productCreatedSuccessfully();
+            
+        } catch (SQLException error) {
+            
+            String text = "Error en el metodo ProductoDAO.Create";
+            message.errorInSQLQuery(text, error);
+            message.productCreateFailed();
+            
         }
-        return r;
+        return result;
     }
 
     @Override
-    public int Actualizar(Object[] ob) {
-        int r = 0;
-        String sql = "UPDATE productos SET Nombre=?, Precio=?, Stock=?, Estado=? WHERE Id_Producto=?";
-        try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            ps.setObject(1, ob[0]);
-            ps.setObject(2, ob[1]);
-            ps.setObject(3, ob[2]);
-            ps.setObject(4, ob[3]);
-            ps.setObject(5, ob[4]);
-            r = ps.executeUpdate();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "No se Pudo Acutualizar el Registro");
-            System.err.println(e);
+    public int Update(Object[] ob) {
+        
+        int result      = 0;
+        String SQLQuery = "UPDATE productos SET Nombre=?, Precio=?, Stock=?, Estado=? WHERE IdProducto=?";
+        
+        try {        
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setObject(1, ob[0]);
+            prepStatement.setObject(2, ob[1]);
+            prepStatement.setObject(3, ob[2]);
+            prepStatement.setObject(4, ob[3]);
+            prepStatement.setObject(5, ob[4]);
+            
+            result = prepStatement.executeUpdate();
+            message.productUpdatedSuccessfully();
+            
+        } catch (SQLException error) {
+      
+            String text = "Error en el metodo ProductoDAO.Update";
+            message.errorInSQLQuery(text, error);
+            message.productUpdateFailed();           
         }
-        return r;
+        
+        return result;
     }
 
     @Override
-    public void Eliminar(int id) {
-        String sql = "DELETE FROM productos WHERE Id_Producto=?";
+    public void Eliminar(int idProducto) {
+        
+        String SQLQuery = "DELETE FROM productos WHERE IdProducto=?";
+        
         try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, id);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error en el Metodo Eliminar");
-            System.err.println(e);
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setInt(1, idProducto);
+            
+            prepStatement.executeUpdate();
+            message.productDeletedSuccessfully();
+        } catch (SQLException error) {
+            
+            String text = "Error en el metodo ProductoDAO.Delete";
+            message.errorInSQLQuery(text, error);
+            message.productDeleteFailed();
         }
     }
 
