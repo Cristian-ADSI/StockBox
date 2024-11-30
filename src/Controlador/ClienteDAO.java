@@ -104,7 +104,7 @@ public class ClienteDAO implements CRUD {
     }
 
     @Override
-    public void Eliminar(int id) {
+    public void Delete(int id) {
         String sql = "DELETE FROM Clientes WHERE Id_Cliente=?";
         try {
             con = cn.Conectar();

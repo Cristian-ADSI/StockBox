@@ -65,19 +65,19 @@ public class Mensaje {
     }
 
     public void productCreatedSuccessfully() {
-        JOptionPane.showMessageDialog(null, "Porducto creado  correctamente");
+        JOptionPane.showMessageDialog(null, "Producto creado  correctamente");
     }
 
     public void productUpdatedSuccessfully() {
-        JOptionPane.showMessageDialog(null, "Porducto actualizado  correctamente");
+        JOptionPane.showMessageDialog(null, "Producto actualizado  correctamente");
     }
 
     public void productDeletedSuccessfully() {
-        JOptionPane.showMessageDialog(null, "Porducto eliminado  correctamente");
+        JOptionPane.showMessageDialog(null, "Producto eliminado  correctamente");
     }
 
     public void productCreateFailed() {
-        JOptionPane.showMessageDialog(null, "No se pudo cerar el producto, error a nivel de sistema");
+        JOptionPane.showMessageDialog(null, "No se pudo crear el producto, error a nivel de sistema");
     }
 
     public void productUpdateFailed() {
