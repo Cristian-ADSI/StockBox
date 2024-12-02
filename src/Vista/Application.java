@@ -452,7 +452,7 @@ public class Application extends javax.swing.JFrame {
     }
 
     void GenerarSerie() {
-        String serie = vendao.NumeroSerie();
+        String serie = vendao.getMaxSerialNumber();
         if (serie == null) {
             txtNroSerie.setText("0001");
         } else {
@@ -495,7 +495,7 @@ public class Application extends javax.swing.JFrame {
 
     void GuardarDetalleVenta() {
         CobroForm cb = new CobroForm();
-        int idVentas = Integer.parseInt(vendao.IdVentas());
+        int idVentas = Integer.parseInt(vendao.getMaxIdSales());
         String nroSerie = txtNroSerie.getText();
         for (int i = 0; i < tblDVentas.getRowCount(); i++) {
             int idProducto = Integer.parseInt(tblDVentas.getValueAt(i, 1).toString());

@@ -55,23 +55,23 @@ public class CobroForm extends javax.swing.JFrame {
         nroSerie = NRS;
         txtNroSerie.setText(NRS);
         
-        evt.setId_Cliente(idClient);
-        evt.setId_Vendedor(idVend);
-        evt.setNro_Venta(NRS);
+        evt.setIdCliente(idClient);
+        evt.setIdVendedor(idVend);
+        evt.setNroSerie(NRS);
         evt.setFecha(fec);
         evt.setMonto(mon);
         evt.setEstado(est);    
-        venDAO.GuardarVenta(evt);
+        venDAO.saveSale(evt);
     }
 
     public void GuardarVenta() {
-        evt.setId_Cliente(idCliente);
-        evt.setId_Vendedor(idVendedor);
-        evt.setNro_Venta(nroSerie);
+        evt.setIdCliente(idCliente);
+        evt.setIdVendedor(idVendedor);
+        evt.setNroSerie(nroSerie);
         evt.setFecha(fecha);
         evt.setMonto(monto);
         evt.setEstado(estado);
-        venDAO.GuardarVenta(evt);
+        venDAO.saveSale(evt);
     }
 
     public void Cap_Guad_DetVenta(int idVent, String NRS, int idProduct, int cant, float preci, String est) {
@@ -90,7 +90,7 @@ public class CobroForm extends javax.swing.JFrame {
         edv.setPrecioVenta(precio);
         edv.setEstado(estadoD);
         
-        venDAO.GuardarDetalleVenta(edv);
+        venDAO.saveSaleDetail(edv);
     }
 
     public void CapTotal(float total, String serie) {
@@ -488,8 +488,8 @@ public class CobroForm extends javax.swing.JFrame {
         int resp = JOptionPane.showConfirmDialog(this, "Desea Cancelar la Venta?");
         if (resp == 0) {
             
-            venDAO.CancelarVenta(txtNroSerie.getText());
-            venDAO.CancelarDetalleVenta(txtNroSerie.getText());
+            venDAO.cancelSale(txtNroSerie.getText());
+            venDAO.cancelSaleDetail(txtNroSerie.getText());
             JOptionPane.showMessageDialog(this, "Venta Cancelada Exitosamente");
             
             dispose();
