@@ -141,7 +141,7 @@ public class UsuarioDAO implements CRUD {
     }
 
     @Override
-    public void Eliminar(int id) {
+    public void Delete(int id) {
         
         String SQLQuery = "DELETE FROM usuarios WHERE Id_Vendedor=?";
         try {

@@ -169,7 +169,7 @@ public class Application extends javax.swing.JFrame {
         } else {
             int resp = JOptionPane.showConfirmDialog(this, "Desea Eliminar el Registro del Empleado \n" + txtNombreV.getText() + "?");
             if (resp == 0) {
-                vdao.Eliminar(idV);
+                vdao.Delete(idV);
                 JOptionPane.showMessageDialog(this, "Registro Elimidado Correctamente");
             } else {
                 JOptionPane.showMessageDialog(this, "Operacion Cancelada");
@@ -262,7 +262,7 @@ public class Application extends javax.swing.JFrame {
         } else {
             int resp = JOptionPane.showConfirmDialog(this, "Desea Eliminar el Registro del Cliente \n" + txtNombreC.getText() + "?");
             if (resp == 0) {
-                cdao.Eliminar(idC);
+                cdao.Delete(idC);
                 JOptionPane.showMessageDialog(this, "Registro Elimidado Correctamente");
             } else {
                 JOptionPane.showMessageDialog(this, "Operacion Cancelada");
@@ -354,7 +354,7 @@ public class Application extends javax.swing.JFrame {
         } else {
             int resp = JOptionPane.showConfirmDialog(this, "Desea Eliminar el Registro del Producto \n" + txtNombreP.getText() + "?");
             if (resp == 0) {
-                pdao.Eliminar(idP);
+                pdao.Delete(idP);
                 JOptionPane.showMessageDialog(this, "Registro Elimidado Correctamente");
             } else {
                 JOptionPane.showMessageDialog(this, "Operacion Cancelada");

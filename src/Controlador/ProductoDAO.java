@@ -63,7 +63,7 @@ public class ProductoDAO implements CRUD {
             }
         } catch (SQLException error) {
         
-            String text = "Eror en el Metodo ProductoDAO.searchProduct";
+            String text = "Error en el Metodo ProductoDAO.searchProduct";
             message.errorInSQLQuery(text, error);
             message.searchProductFailed();
         }
@@ -94,7 +94,7 @@ public class ProductoDAO implements CRUD {
             }
         } catch (SQLException error) {
             
-            String text = "Eror en el Metodo ProductoDAO.Read";
+            String text = "Error en el Metodo ProductoDAO.Read";
             message.errorInSQLQuery(text, error);
             message.productReadFailed();
         }
@@ -157,7 +157,7 @@ public class ProductoDAO implements CRUD {
     }
 
     @Override
-    public void Eliminar(int idProducto) {
+    public void Delete(int idProducto) {
         
         String SQLQuery = "DELETE FROM productos WHERE IdProducto=?";
         
