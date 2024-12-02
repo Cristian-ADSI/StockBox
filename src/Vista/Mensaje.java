@@ -96,9 +96,36 @@ public class Mensaje {
     public void productReadFailed() {
         JOptionPane.showMessageDialog(null, "No se pudo cargar los productos, error a nivel de sistema");
     }
-    
-     public void productDeleteFailed() {
+
+    public void productDeleteFailed() {
         JOptionPane.showMessageDialog(null, "No se pudo eliminar el producto, error a nivel de sistema");
     }
 
+    public void saleCanceledSuccessfully() {
+        JOptionPane.showMessageDialog(null, "Venta Cancelada Correctamente");
+    }
+
+    public void saleCanceleFailed() {
+        JOptionPane.showMessageDialog(null, "No se Pudo Cancelar la Venta, Error de sistema");
+    }
+
+    public void getMaxSaleIdFailed() {
+        JOptionPane.showMessageDialog(null, "No se Pudo continuar la operacion, error de sistema");
+    }
+
+    public void saleSavedSuccessfully() {
+        JOptionPane.showMessageDialog(null, "Venta guardada Correctamente");
+    }
+
+    public void saleSaveFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo guardar la venta. error de sistema");
+    }
+
+    public void saleSaveDetailFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo guardar el detalle de la venta. error de sistema");
+    }
+
+    public void getMaxSerialNumberFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo cargar el numero de serie. error de sistema");
+    }
 }

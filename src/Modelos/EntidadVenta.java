@@ -5,12 +5,12 @@
  */
 package Modelos;
 
-
 public class EntidadVenta {
-    int Id_Venta;
-    int Id_Cliente;
-    int Id_Vendedor;
-    String Nro_Venta;
+
+    int IdVenta;
+    int IdCliente;
+    int IdVendedor;
+    String NroSerie;
     String Fecha;
     float Monto;
     String Estado;
@@ -18,46 +18,46 @@ public class EntidadVenta {
     public EntidadVenta() {
     }
 
-    public EntidadVenta(int Id_Venta, int Id_Cliente, int Id_Vendedor, String Nro_Venta, String Fecha, float Monto, String Estado) {
-        this.Id_Venta = Id_Venta;
-        this.Id_Cliente = Id_Cliente;
-        this.Id_Vendedor = Id_Vendedor;
-        this.Nro_Venta = Nro_Venta;
-        this.Fecha = Fecha;
-        this.Monto = Monto;
-        this.Estado = Estado;
+    public EntidadVenta(int IdVenta, int IdCliente, int IdVendedor, String NroSerie, String Fecha, float Monto, String Estado) {
+        this.IdVenta    = IdVenta;
+        this.IdCliente  = IdCliente;
+        this.IdVendedor = IdVendedor;
+        this.NroSerie   = NroSerie;
+        this.Fecha      = Fecha;
+        this.Monto      = Monto;
+        this.Estado     = Estado;
     }
 
-    public int getId_Venta() {
-        return Id_Venta;
+    public int getIdVenta() {
+        return IdVenta;
     }
 
-    public void setId_Venta(int Id_Venta) {
-        this.Id_Venta = Id_Venta;
+    public void setIdVenta(int Id_Venta) {
+        this.IdVenta = Id_Venta;
     }
 
-    public int getId_Cliente() {
-        return Id_Cliente;
+    public int getIdCliente() {
+        return IdCliente;
     }
 
-    public void setId_Cliente(int Id_Cliente) {
-        this.Id_Cliente = Id_Cliente;
+    public void setIdCliente(int Id_Cliente) {
+        this.IdCliente = Id_Cliente;
     }
 
-    public int getId_Vendedor() {
-        return Id_Vendedor;
+    public int getIdVendedor() {
+        return IdVendedor;
     }
 
-    public void setId_Vendedor(int Id_Vendedor) {
-        this.Id_Vendedor = Id_Vendedor;
+    public void setIdVendedor(int Id_Vendedor) {
+        this.IdVendedor = Id_Vendedor;
     }
 
-    public String getNro_Venta() {
-        return Nro_Venta;
+    public String getNroSerie() {
+        return NroSerie;
     }
 
-    public void setNro_Venta(String Nro_Venta) {
-        this.Nro_Venta = Nro_Venta;
+    public void setNroSerie(String Nro_Venta) {
+        this.NroSerie = Nro_Venta;
     }
 
     public String getFecha() {
@@ -83,6 +83,5 @@ public class EntidadVenta {
     public void setEstado(String Estado) {
         this.Estado = Estado;
     }
-    
-    
+
 }

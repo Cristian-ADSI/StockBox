@@ -27,7 +27,6 @@ public class ProductoDAO implements CRUD {
         String SQLQuery = "UPDATE productos SET Stock=? where IdProducto =?";
         
         try {
-            
             prepStatement = connection.prepareStatement(SQLQuery);
             prepStatement.setInt(1, stock);
             prepStatement.setInt(2, idProduct);

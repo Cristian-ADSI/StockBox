@@ -1,119 +1,157 @@
 package Controlador;
 
-import Modelos.EntidadVenta;
-import Modelos.EntidadDetalleVenta;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
+
+import Modelos.EntidadVenta;
+import Modelos.EntidadDetalleVenta;
+import Vista.Mensaje;
 
 public class VentasDAO {
 
-    Connection con;
-    Conexion cn = new Conexion();
-    PreparedStatement ps;
-    ResultSet rs;
-    int r = 0;
+    Conexion conexion = new Conexion();
+    Mensaje message   = new Mensaje();
+
+    Connection connection = conexion.Conectar();
+    PreparedStatement prepStatement;
+    ResultSet resSet;
     
-    public int CancelarVenta(String Serie){
-        String sql = "UPDATE ventas  SET Estado='Cancelada' WHERE Serie=?";
+    int result = 0;
+
+    public int cancelSale(String NroSerie) {
+        String SQLQuery = "UPDATE ventas  SET Estado='Cancelada' WHERE NroSerie=?";
+
         try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, Serie);
-            r = ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Venta Cancelada Correctamente"); 
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "No se Pudo Cancelar la Venta");
-            System.err.println(e);
-        }       
-        return r;
-    }
-    
-    public int CancelarDetalleVenta(String NroSerie){  
-        String sql = "UPDATE  detalle_ventas  SET Estado='Cancelada' WHERE NroSerie=?";
-        try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, NroSerie);
-            r = ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Venta Cancelada Correctamente"); 
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "No se Pudo Cancelar la Venta");
-            System.err.println(e);
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setString(1, NroSerie);
+            result        = prepStatement.executeUpdate();
+            message.saleCanceledSuccessfully();
+
+        } catch (SQLException error) {
+            
+            String text = "Error en el metodo VentasDAO.cancelSale";
+            message.errorInSQLQuery(text, error);
+            message.saleCanceleFailed();
         }
-        return r;
+        
+        return result;
     }
 
-    public String IdVentas() {
-        String idVentas = "";
-        String sql = "SELECT MAX(Id_Venta) FROM ventas";
+    public int cancelSaleDetail(String NroSerie) {
+        
+        String SQLQuery = "UPDATE  detalle_ventas  SET Estado='Cancelada' WHERE NroSerie=?";
+        
         try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                idVentas = rs.getString(1);
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setString(1, NroSerie);
+            result        = prepStatement.executeUpdate();
+            message.saleCanceledSuccessfully();
+            
+        } catch (SQLException error) {
+            
+            String text = "Error en el metodo VentasDAO.cancelSaleDetail";
+            message.errorInSQLQuery(text, error);
+            message.saleCanceleFailed();
+        }
+        
+        return result;
+    }
+
+    public String getMaxIdSales() {
+        
+        String idSales  = "";
+        String SQLQuery = "SELECT MAX(IdVenta) FROM ventas";
+        
+        try {
+            connection    = conexion.Conectar();
+            prepStatement = connection.prepareStatement(SQLQuery);
+            resSet        = prepStatement.executeQuery();
+            
+            while (resSet.next()) {
+                idSales = resSet.getString(1);
             }
-        } catch (Exception e) {
+            
+        } catch (SQLException error) {
+            
+            String text = "Error en el metodo VentasDAO.getMaxIdSales";
+            message.errorInSQLQuery(text, error);
+            message.getMaxSaleIdFailed();
         }
-        return idVentas;
+        
+        return idSales;
     }
 
-    public int GuardarVenta(EntidadVenta venta) {
-        EntidadVenta ev = new EntidadVenta();
-        String sql = "INSERT INTO ventas (Cliente, Vendedor,Serie, Fecha_Venta, Monto, Estado)VALUES(?,?,?,?,?,?)";
+    public int saveSale(EntidadVenta sale) {
+        
+        String SQLQuery = "INSERT INTO ventas (Cliente, Vendedor,NroSerie, FechaVenta, Monto, Estado)VALUES(?,?,?,?,?,?)";
+        
         try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, venta.getId_Cliente());
-            ps.setInt(2, venta.getId_Vendedor());
-            ps.setString(3, venta.getNro_Venta());
-            ps.setString(4, venta.getFecha());
-            ps.setFloat(5, venta.getMonto());
-            ps.setString(6, venta.getEstado());
-            r = ps.executeUpdate();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error en el metodo GuardarVenta ");
-            System.err.println("Error" + e + "\n");
+            prepStatement = connection.prepareStatement(SQLQuery);
+            
+            prepStatement.setInt(1,     sale.getIdCliente());
+            prepStatement.setInt(2,     sale.getIdVendedor());
+            prepStatement.setString(3,  sale.getNroSerie());
+            prepStatement.setString(4,  sale.getFecha());
+            prepStatement.setFloat(5,   sale.getMonto());
+            prepStatement.setString(6,  sale.getEstado());
+            
+            result = prepStatement.executeUpdate();
+            
+        } catch (SQLException error) {
+            String text = "Error en el metodo VentasDAO.saveSale";
+            message.errorInSQLQuery(text, error);
+            message.saleSaveFailed();
         }
-        return r;
+        
+        return result;
     }
 
-    public int GuardarDetalleVenta(EntidadDetalleVenta detalleVenta) {
-        String sql = "INSERT INTO detalle_ventas(Id_Venta, NroSerie, Producto, Cantidad, PrecUnidad, Estado) value(?,?,?,?,?,?)";
+    public int saveSaleDetail(EntidadDetalleVenta detalleVenta) {
+        
+        String SQLQuery = "INSERT INTO detalle_ventas(IdVenta, NroSerie, Producto, Cantidad, PrecioUnidad, Estado) value(?,?,?,?,?,?)";
+        
         try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, detalleVenta.getId_Venta());
-            ps.setString(2, detalleVenta.getNroSerie());
-            ps.setInt(3, detalleVenta.getId_Producto());
-            ps.setInt(4, detalleVenta.getCantidad());
-            ps.setFloat(5, detalleVenta.getPrecioVenta());
-            ps.setString(6, detalleVenta.getEstado());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error en el metodo Guardar Detalle Venta");
-            System.err.println("Error" + e + "\n");
+            prepStatement = connection.prepareStatement(SQLQuery);
+            
+            prepStatement.setInt(1, detalleVenta.getId_Venta());
+            prepStatement.setString(2, detalleVenta.getNroSerie());
+            prepStatement.setInt(3, detalleVenta.getId_Producto());
+            prepStatement.setInt(4, detalleVenta.getCantidad());
+            prepStatement.setFloat(5, detalleVenta.getPrecioVenta());
+            prepStatement.setString(6, detalleVenta.getEstado());
+            
+            prepStatement.executeUpdate();
+            
+        } catch (SQLException error) {
+            
+            String text = "Error en el metodo VentasDAO.saveSaleDetail";
+            message.errorInSQLQuery(text, error);
+            message.saleSaveDetailFailed();
         }
-        return r;
+        return result;
     }
 
-    public String NumeroSerie() {
-        String serie = "";
-        String sql = "SELECT MAX(Serie) FROM ventas";
+    public String getMaxSerialNumber() {
+        
+        String NroSerie = "";
+        String SQLQuery = "SELECT MAX(Serie) FROM ventas";
+        
         try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                serie = rs.getString(1);
+            prepStatement = connection.prepareStatement(SQLQuery);
+            resSet = prepStatement.executeQuery();
+            
+            while (resSet.next()) {
+                NroSerie = resSet.getString(1);
             }
-        } catch (SQLException e) {
-             JOptionPane.showMessageDialog(null, "Error en el metodo Generar Numero de serie ");
-            System.err.println("Error" + e + "\n");
+            
+        } catch (SQLException error) {
+            String text = "Error en el metodo VentasDAO.getMaxSeriealNumber";
+            message.errorInSQLQuery(text, error);
+            message.getMaxSerialNumberFailed();
         }
-        return serie;
+        
+        return NroSerie;
     }
 }
