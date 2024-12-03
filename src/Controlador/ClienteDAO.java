@@ -1,6 +1,7 @@
 package Controlador;
 
 import Modelos.EntidadCliente;
+import Vista.Mensaje;
 import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,110 +11,145 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 public class ClienteDAO implements CRUD {
-
-    Connection con;
-    Conexion cn = new Conexion();
-    PreparedStatement ps;
-    ResultSet rs;
     
-    public EntidadCliente BuscarCliente(String cedula){
-        EntidadCliente ec = new EntidadCliente();
-        String sql="SELECT * FROM clientes WHERE Cedula=?";
+    Mensaje message   = new Mensaje();
+    Conexion conexion = new Conexion();
+
+    Connection connection = conexion.Conectar();
+    PreparedStatement prepStatement;
+    ResultSet resSet;
+    
+    public EntidadCliente searchCustomer(String DNI){
+        
+        EntidadCliente entCliente = new EntidadCliente();
+        String SQLQuery="SELECT * FROM clientes WHERE DNI=?";
+        
         try {
-            con=cn.Conectar();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, cedula);
-            rs=ps.executeQuery();
-            while (rs.next()) {  
-                ec.setId_Cliente(rs.getInt(1));
-                ec.setCedula(rs.getString(2));
-                ec.setNombre(rs.getString(3));
-                ec.setDireccion(rs.getString(4));
-                ec.setEstado(rs.getString(5));       
-            }         
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Eror en el Metodo Buscar Cliente");
-            System.err.println(e);
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setString(1, DNI);
+            
+            resSet=prepStatement.executeQuery();
+            
+            while (resSet.next()) {  
+                entCliente.setIdCliente(   resSet.getInt(1));
+                entCliente.setDNI(       resSet.getString(2));
+                entCliente.setNombre(       resSet.getString(3));
+                entCliente.setDireccion(    resSet.getString(4));
+                entCliente.setEstado(       resSet.getString(5));       
+            }
+            
+        } catch (SQLException error) {
+            
+            String text = "Error en el metodo ClienteDAO.searchCustomer: ";
+            message.errorInSQLQuery(text, error);
+            message.searchCustomerFailed();
         }
-        return ec;
+        
+        return entCliente;
     }
     
     @Override
     public List Read() {
-        List<EntidadCliente> lista = new ArrayList<>();
-        String sql = "SELECT * FROM clientes";
-        try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                EntidadCliente ec = new EntidadCliente();
-                ec.setId_Cliente(rs.getInt(1));
-                ec.setCedula(rs.getString(2));
-                ec.setNombre(rs.getString(3));
-                ec.setDireccion(rs.getString(4));
-                ec.setEstado(rs.getString(5));
-                lista.add(ec);
+        
+        List<EntidadCliente> customersList = new ArrayList<>();
+        EntidadCliente entCliente = new EntidadCliente();
+        String SQLQuery = "SELECT * FROM clientes";
+        
+        try {          
+            prepStatement = connection.prepareStatement(SQLQuery);
+            resSet = prepStatement.executeQuery();
+            
+            while (resSet.next()) {
+                
+                entCliente.setIdCliente(   resSet.getInt(1));
+                entCliente.setDNI(       resSet.getString(2));
+                entCliente.setNombre(       resSet.getString(3));
+                entCliente.setDireccion(    resSet.getString(4));
+                entCliente.setEstado(       resSet.getString(5));
+                
+                customersList.add(entCliente);
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Eror en el Metodo Listar");
-            System.err.println(e);
+            
+        } catch (SQLException error) {
+            
+            String text = "Error en el metodo ClienteDAO.Read: ";
+            message.errorInSQLQuery(text, error);
+            message.readCustomersFailed();
         }
-        return lista;
+        return customersList;
     }
 
     @Override
     public int Create(Object[] ob) {
-        int r = 0;
-        String sql = "INSERT INTO clientes(Cedula, Nombre, Direccion, Estado) VALUES(?,?,?,?)";
+        
+        int result = 0;
+        String SQLQuery = "INSERT INTO clientes(DNI, Nombre, Direccion, Estado) VALUES(?,?,?,?)";
+        
         try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            ps.setObject(1, ob[0]);
-            ps.setObject(2, ob[1]);
-            ps.setObject(3, ob[2]);
-            ps.setObject(4, ob[3]);
-            r = ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Registro Creado Correctamente");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "No se pudo crear el registro \n Verifique la longitud de los campos y "
-                    + "que no tenca campos vacios");
-            System.err.println(e);
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setObject(1, ob[0]);
+            prepStatement.setObject(2, ob[1]);
+            prepStatement.setObject(3, ob[2]);
+            prepStatement.setObject(4, ob[3]);
+            
+            result = prepStatement.executeUpdate();
+            
+            message.createCustomerSuccess();
+            
+        } catch (SQLException error) {
+            
+            String text = "Error en el metodo ClienteDAO.Create: ";
+            message.errorInSQLQuery(text, error);
+            message.createCustomerFailed();
         }
-        return r;
+        
+        return result;
     }
 
     @Override
     public int Update(Object[] ob) {
-        int r = 0;
-        String sql = "UPDATE clientes SET Cedula=?, Nombre=?, Direccion=?, Estado=? WHERE Id_Cliente=?";
+        
+        int result = 0;
+        String SQLQuery = "UPDATE clientes SET DNI=?, Nombre=?, Direccion=?, Estado=? WHERE IdCliente=?";
+        
         try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            ps.setObject(1, ob[0]);
-            ps.setObject(2, ob[1]);
-            ps.setObject(3, ob[2]);
-            ps.setObject(4, ob[3]);
-            ps.setObject(5, ob[4]);
-            r = ps.executeUpdate();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "No se Pudo Acutualizar el Registro");
-            System.err.println(e);
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setObject(1, ob[0]);
+            prepStatement.setObject(2, ob[1]);
+            prepStatement.setObject(3, ob[2]);
+            prepStatement.setObject(4, ob[3]);
+            prepStatement.setObject(5, ob[4]);
+            
+            result = prepStatement.executeUpdate();
+            message.updateCustomerSuccess();
+            
+        } catch (SQLException error) {
+            
+            String text = "Error en el metodo ClienteDAO.Update: ";
+            message.errorInSQLQuery(text, error);
+            message.updateCustomerFailed();
         }
-        return r;
+        
+        return result;
     }
 
     @Override
-    public void Delete(int id) {
-        String sql = "DELETE FROM Clientes WHERE Id_Cliente=?";
+    public void Delete(int idCliente) {
+        
+        String SQLQuery = "DELETE FROM Clientes WHERE Id_Cliente=?";
+        
         try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, id);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error en el Metodo Eliminar");
-            System.err.println(e);
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setInt(1, idCliente);
+            
+            prepStatement.executeUpdate();
+            message.deleteCustomerSuccess();
+            
+        } catch (SQLException error) {
+            
+            String text = "Error en el metodo ClienteDAO.Delete: ";
+            message.errorInSQLQuery(text, error);
+            message.deleteCustomerFailed();
         }
 
     }

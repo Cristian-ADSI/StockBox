@@ -128,4 +128,36 @@ public class Mensaje {
     public void getMaxSerialNumberFailed() {
         JOptionPane.showMessageDialog(null, "No se pudo cargar el numero de serie. error de sistema");
     }
+
+    public void searchCustomerFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo encontrar cliente. error de sistema");
+    }
+
+    public void readCustomersFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo listar clientes. error de sistema");
+    }
+
+    public void createCustomerSuccess() {
+        JOptionPane.showMessageDialog(null, "Cliente creado con exito");
+    }
+
+    public void createCustomerFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo crear el cliente. error de sistema");
+    }
+
+    public void updateCustomerSuccess() {
+        JOptionPane.showMessageDialog(null, "Cliente actualizado con exito");
+    }
+
+    public void updateCustomerFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo actuializar el cliente. error de sistema");
+    }
+
+    public void deleteCustomerSuccess() {
+        JOptionPane.showMessageDialog(null, "Cliente elminado con exito");
+    }
+
+    public void deleteCustomerFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo eliminar el cliente. error de sistema");
+    }
 }

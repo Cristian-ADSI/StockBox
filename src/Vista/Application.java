@@ -191,8 +191,8 @@ public class Application extends javax.swing.JFrame {
         modeloC = (DefaultTableModel) tblCliente.getModel();
         Object[] ob = new Object[5];
         for (int i = 0; i < lista.size(); i++) {
-            ob[0] = lista.get(i).getId_Cliente();
-            ob[1] = lista.get(i).getCedula();
+            ob[0] = lista.get(i).getIdCliente();
+            ob[1] = lista.get(i).getDNI();
             ob[2] = lista.get(i).getNombre();
             ob[3] = lista.get(i).getDireccion();
             ob[4] = lista.get(i).getEstado();
@@ -369,8 +369,8 @@ public class Application extends javax.swing.JFrame {
         if (txtCodCliente.getText().equals("")) {
             JOptionPane.showMessageDialog(this, "Debe Ingresar el Codigo del Cliente");
         } else {
-            ec = cdao.BuscarCliente(cedula);
-            if (ec.getCedula() != null) {
+            ec = cdao.searchCustomer(cedula);
+            if (ec.getDNI() != null) {
                 txtCliente.setText(ec.getNombre());
                 txtCodProducto.requestFocus();
             } else {
@@ -474,7 +474,7 @@ public class Application extends javax.swing.JFrame {
 
     void GuardarVenta() {
 
-        int cliente = ec.getId_Cliente();
+        int cliente = ec.getIdCliente();
         //Estamos mandando la cedula en vez del id del cliente y por eso arroja error
         int vendedor = Integer.parseInt(txtColaborador.getText());
         String nroSerie = txtNroSerie.getText();
