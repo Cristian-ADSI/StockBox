@@ -3,8 +3,8 @@ package Modelos;
 
 
 public class EntidadCliente {
-    int Id_Cliente;
-    String Cedula;
+    int IdCliente;
+    String DNI;
     String Nombre;
     String Direccion;
     String Estado;
@@ -12,28 +12,28 @@ public class EntidadCliente {
     public EntidadCliente() {
     }
 
-    public EntidadCliente(int Id_Cliente, String Cedula, String Nombre, String Direccion, String Estado) {
-        this.Id_Cliente = Id_Cliente;
-        this.Cedula = Cedula;
+    public EntidadCliente(int IdCliente, String DNI, String Nombre, String Direccion, String Estado) {
+        this.IdCliente = IdCliente;
+        this.DNI = DNI;
         this.Nombre = Nombre;
         this.Direccion = Direccion;
         this.Estado = Estado;
     }
 
-    public int getId_Cliente() {
-        return Id_Cliente;
+    public int getIdCliente() {
+        return IdCliente;
     }
 
-    public void setId_Cliente(int Id_Cliente) {
-        this.Id_Cliente = Id_Cliente;
+    public void setIdCliente(int IdCliente) {
+        this.IdCliente = IdCliente;
     }
 
-    public String getCedula() {
-        return Cedula;
+    public String getDNI() {
+        return DNI;
     }
 
-    public void setCedula(String Cedula) {
-        this.Cedula = Cedula;
+    public void setDNI(String DNI) {
+        this.DNI = DNI;
     }
 
     public String getNombre() {
