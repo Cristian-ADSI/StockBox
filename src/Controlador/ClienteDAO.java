@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 public class ClienteDAO implements CRUD {
     
@@ -52,22 +51,24 @@ public class ClienteDAO implements CRUD {
     public List Read() {
         
         List<EntidadCliente> customersList = new ArrayList<>();
-        EntidadCliente entCliente = new EntidadCliente();
+
+        
         String SQLQuery = "SELECT * FROM clientes";
         
         try {          
             prepStatement = connection.prepareStatement(SQLQuery);
             resSet = prepStatement.executeQuery();
             
-            while (resSet.next()) {
+            while (resSet.next()) {   
+                EntidadCliente entCliente = new EntidadCliente();
                 
-                entCliente.setIdCliente(   resSet.getInt(1));
-                entCliente.setDNI(       resSet.getString(2));
+                entCliente.setIdCliente(    resSet.getInt(1));
+                entCliente.setDNI(          resSet.getString(2));
                 entCliente.setNombre(       resSet.getString(3));
                 entCliente.setDireccion(    resSet.getString(4));
-                entCliente.setEstado(       resSet.getString(5));
+                entCliente.setEstado(       resSet.getString(5));      
                 
-                customersList.add(entCliente);
+                customersList.add(entCliente);   
             }
             
         } catch (SQLException error) {

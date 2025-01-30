@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-04-2021 a las 16:10:52
--- Versión del servidor: 10.4.18-MariaDB
--- Versión de PHP: 8.0.3
+-- Tiempo de generación: 30-01-2025 a las 01:46:36
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `bd_ventas`
 --
+CREATE DATABASE IF NOT EXISTS `bd_ventas` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `bd_ventas`;
 
 -- --------------------------------------------------------
 
@@ -28,18 +30,18 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `clientes` (
-  `Id_Cliente` int(11) NOT NULL,
-  `Cedula` int(15) NOT NULL,
+  `IdCliente` int(11) NOT NULL,
+  `DNI` int(15) NOT NULL,
   `Nombre` varchar(50) NOT NULL,
   `Direccion` varchar(50) NOT NULL,
   `Estado` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `clientes`
 --
 
-INSERT INTO `clientes` (`Id_Cliente`, `Cedula`, `Nombre`, `Direccion`, `Estado`) VALUES
+INSERT INTO `clientes` (`IdCliente`, `DNI`, `Nombre`, `Direccion`, `Estado`) VALUES
 (1, 456214578, 'José Ramirez', 'Cll 66 #45A-53', 'Activo'),
 (2, 789526314, 'Emily Hunt', 'Av Manchester 754', 'Activo'),
 (3, 222222222, 'Carlos Cabrera', 'Cll 45 #45F-56', 'Activo'),
@@ -48,8 +50,7 @@ INSERT INTO `clientes` (`Id_Cliente`, `Cedula`, `Nombre`, `Direccion`, `Estado`)
 (7, 777444555, 'Hector Saldarriaga', 'Cll Travesias', 'Inactivo'),
 (8, 444777999, 'Pablo Perez', 'Calle Las Florez', 'Inactivo'),
 (10, 775522777, 'Eric Stone', 'Av newville 458', 'Activo'),
-(11, 999111777, 'Emily Vanegas', 'Cll Villa Diego 87', 'Activo'),
-(12, 777555666, 'Camilo Vazques', 'Av Villa Nueva 785', 'Activo');
+(11, 999111777, 'Emily Vanegas', 'Cll Villa Diego 87', 'Activo');
 
 -- --------------------------------------------------------
 
@@ -60,11 +61,11 @@ INSERT INTO `clientes` (`Id_Cliente`, `Cedula`, `Nombre`, `Direccion`, `Estado`)
 CREATE TABLE `detalle_ventas` (
   `Id_Detalle` int(11) NOT NULL,
   `Id_Venta` int(11) NOT NULL,
-  `NroSerie` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `NroSerie` varchar(255) NOT NULL,
   `Producto` int(11) NOT NULL,
   `Cantidad` int(11) NOT NULL,
   `PrecUnidad` float NOT NULL,
-  `Estado` varchar(15) COLLATE utf8_spanish_ci NOT NULL
+  `Estado` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -72,8 +73,6 @@ CREATE TABLE `detalle_ventas` (
 --
 
 INSERT INTO `detalle_ventas` (`Id_Detalle`, `Id_Venta`, `NroSerie`, `Producto`, `Cantidad`, `PrecUnidad`, `Estado`) VALUES
-(1, 1, '0001', 5, 1, 650000, 'Cancelada'),
-(2, 1, '0001', 3, 2, 270000, 'Cancelada'),
 (3, 2, '0002', 1, 1, 9999.99, 'Cancelada'),
 (4, 2, '0002', 1, 1, 9999.99, 'Cancelada'),
 (5, 2, '0002', 1, 1, 9999.99, 'Cancelada'),
@@ -97,18 +96,18 @@ INSERT INTO `detalle_ventas` (`Id_Detalle`, `Id_Venta`, `NroSerie`, `Producto`, 
 --
 
 CREATE TABLE `productos` (
-  `Id_Producto` int(11) NOT NULL,
+  `IdProducto` int(11) NOT NULL,
   `Nombre` varchar(50) NOT NULL,
   `Precio` float DEFAULT NULL,
   `Stock` int(11) NOT NULL,
   `Estado` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `productos` (`Id_Producto`, `Nombre`, `Precio`, `Stock`, `Estado`) VALUES
+INSERT INTO `productos` (`IdProducto`, `Nombre`, `Precio`, `Stock`, `Estado`) VALUES
 (1, 'Producto de Prueba 1', 9999.99, 23, 'Existente'),
 (2, 'Ram 8G (X2) Corsair Vengance', 35000, 4, 'Existente'),
 (3, 'Ram 4G (x2) Tryden-Z RGB DDR4', 270000, 17, 'Existente'),
@@ -122,19 +121,19 @@ INSERT INTO `productos` (`Id_Producto`, `Nombre`, `Precio`, `Stock`, `Estado`) V
 
 CREATE TABLE `usuarios` (
   `Id_Vendedor` int(11) NOT NULL,
-  `Cedula` varchar(11) NOT NULL,
+  `DNI` varchar(11) NOT NULL,
   `Nombre` varchar(50) NOT NULL,
   `Telefono` varchar(20) NOT NULL,
   `Estado` varchar(10) NOT NULL,
-  `User_2` varchar(15) NOT NULL,
+  `Usuario` varchar(15) NOT NULL,
   `Roll` varchar(15) DEFAULT 'No asignado'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`Id_Vendedor`, `Cedula`, `Nombre`, `Telefono`, `Estado`, `User_2`, `Roll`) VALUES
+INSERT INTO `usuarios` (`Id_Vendedor`, `DNI`, `Nombre`, `Telefono`, `Estado`, `Usuario`, `Roll`) VALUES
 (1, '123456', 'Prueba_1', '555-58-88', 'Activo', 'Empleado_1', 'Vendedor'),
 (2, '455122', 'Prueba_2', '888-55-44', 'Inactivo', 'Empleado_2', 'Vendedor'),
 (5, '746421', 'Admin_1', '777-77-77', 'Activo', 'Admin_1', 'Administrador'),
@@ -154,14 +153,13 @@ CREATE TABLE `ventas` (
   `Fecha_Venta` date NOT NULL,
   `Monto` float NOT NULL,
   `Estado` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `ventas`
 --
 
 INSERT INTO `ventas` (`Id_venta`, `Cliente`, `Vendedor`, `Serie`, `Fecha_Venta`, `Monto`, `Estado`) VALUES
-(1, 12, 5, 1, '2021-04-06', 1190000, 'Cancelada'),
 (2, 8, 5, 2, '2021-04-06', 30000, 'Cancelada'),
 (3, 1, 1, 3, '2021-04-06', 810000, 'Efectiva'),
 (4, 4, 1, 4, '2021-04-06', 30000, 'Efectiva'),
@@ -177,7 +175,7 @@ INSERT INTO `ventas` (`Id_venta`, `Cliente`, `Vendedor`, `Serie`, `Fecha_Venta`,
 -- Indices de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  ADD PRIMARY KEY (`Id_Cliente`);
+  ADD PRIMARY KEY (`IdCliente`);
 
 --
 -- Indices de la tabla `detalle_ventas`
@@ -191,7 +189,7 @@ ALTER TABLE `detalle_ventas`
 -- Indices de la tabla `productos`
 --
 ALTER TABLE `productos`
-  ADD PRIMARY KEY (`Id_Producto`);
+  ADD PRIMARY KEY (`IdProducto`);
 
 --
 -- Indices de la tabla `usuarios`
@@ -215,7 +213,7 @@ ALTER TABLE `ventas`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `Id_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `IdCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_ventas`
@@ -227,7 +225,7 @@ ALTER TABLE `detalle_ventas`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `Id_Producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `IdProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -249,14 +247,14 @@ ALTER TABLE `ventas`
 -- Filtros para la tabla `detalle_ventas`
 --
 ALTER TABLE `detalle_ventas`
-  ADD CONSTRAINT `FK_IDPROUDUCTO_PRODUCTOS` FOREIGN KEY (`Producto`) REFERENCES `productos` (`Id_Producto`),
+  ADD CONSTRAINT `FK_IDPROUDUCTO_PRODUCTOS` FOREIGN KEY (`Producto`) REFERENCES `productos` (`IdProducto`),
   ADD CONSTRAINT `FK_IDVENTA_VENTA` FOREIGN KEY (`Id_Venta`) REFERENCES `ventas` (`Id_venta`);
 
 --
 -- Filtros para la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`Cliente`) REFERENCES `clientes` (`Id_Cliente`),
+  ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`Cliente`) REFERENCES `clientes` (`IdCliente`),
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`Vendedor`) REFERENCES `usuarios` (`Id_Vendedor`);
 COMMIT;
 

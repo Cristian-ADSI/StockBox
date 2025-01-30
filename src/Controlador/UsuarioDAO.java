@@ -53,7 +53,7 @@ public class UsuarioDAO implements CRUD {
     @Override
     public List Read() {
         
-        EntidadUsuario entUsuario   = new EntidadUsuario();
+
         List<EntidadUsuario> usersList = new ArrayList<>();
         
         String SQLQuery = "SELECT * FROM usuarios";
@@ -64,7 +64,8 @@ public class UsuarioDAO implements CRUD {
             resSet = prepStatement.executeQuery();
             
             while (resSet.next()) {
-               
+                EntidadUsuario entUsuario   = new EntidadUsuario();
+                
                 entUsuario.setIdUsuario(resSet.getString(1));
                 entUsuario.setDNI(      resSet.getString(2));
                 entUsuario.setNombre(   resSet.getString(3));

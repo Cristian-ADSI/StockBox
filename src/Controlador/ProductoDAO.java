@@ -74,7 +74,7 @@ public class ProductoDAO implements CRUD {
     @Override
     public List Read() {
 
-        EntidadProducto entProduct          = new EntidadProducto();
+        
         List<EntidadProducto> productList   = new ArrayList<>();
         String SQLQuery                     = "SELECT * FROM productos";
         
@@ -83,6 +83,7 @@ public class ProductoDAO implements CRUD {
             resSet = prepStatement.executeQuery();
             
             while (resSet.next()) {
+                EntidadProducto entProduct  = new EntidadProducto();
                 
                 entProduct.setIdProducto(resSet.getInt  (1));
                 entProduct.setNombre(resSet.getString   (2));

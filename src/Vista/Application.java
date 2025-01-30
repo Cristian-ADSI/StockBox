@@ -188,16 +188,21 @@ public class Application extends javax.swing.JFrame {
 
     void ListarC() {
         List<EntidadCliente> lista = cdao.Read();
+        
+        System.out.println(lista.get(1).getNombre());
+        
         modeloC = (DefaultTableModel) tblCliente.getModel();
         Object[] ob = new Object[5];
-        for (int i = 0; i < lista.size(); i++) {
+        for (int i = 0; i < lista.size(); i++) {      
             ob[0] = lista.get(i).getIdCliente();
             ob[1] = lista.get(i).getDNI();
             ob[2] = lista.get(i).getNombre();
             ob[3] = lista.get(i).getDireccion();
             ob[4] = lista.get(i).getEstado();
+            
             modeloC.addRow(ob);
         }
+        
         tblCliente.setModel(modeloC);
     }
 
