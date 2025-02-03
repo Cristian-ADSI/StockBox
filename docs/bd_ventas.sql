@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-01-2025 a las 01:46:36
+-- Tiempo de generación: 03-02-2025 a las 15:47:11
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -126,18 +126,21 @@ CREATE TABLE `usuarios` (
   `Telefono` varchar(20) NOT NULL,
   `Estado` varchar(10) NOT NULL,
   `Usuario` varchar(15) NOT NULL,
-  `Roll` varchar(15) DEFAULT 'No asignado'
+  `Contrasena` varchar(255) NOT NULL,
+  `Roll` varchar(15) DEFAULT 'No asignado',
+  `Token` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`Id_Vendedor`, `DNI`, `Nombre`, `Telefono`, `Estado`, `Usuario`, `Roll`) VALUES
-(1, '123456', 'Prueba_1', '555-58-88', 'Activo', 'Empleado_1', 'Vendedor'),
-(2, '455122', 'Prueba_2', '888-55-44', 'Inactivo', 'Empleado_2', 'Vendedor'),
-(5, '746421', 'Admin_1', '777-77-77', 'Activo', 'Admin_1', 'Administrador'),
-(6, '104074', 'AdminBDA', '888-88-88', 'Activo', 'BDA_1', 'No asignado');
+INSERT INTO `usuarios` (`Id_Vendedor`, `DNI`, `Nombre`, `Telefono`, `Estado`, `Usuario`, `Contrasena`, `Roll`, `Token`) VALUES
+(1, '123456', 'Prueba_1', '555-58-88', 'Activo', 'Empleado_1', '', 'Vendedor', NULL),
+(2, '455122', 'Prueba_2', '888-55-44', 'Inactivo', 'Empleado_2', '', 'Vendedor', NULL),
+(5, '746421', 'Admin_1', '777-77-77', 'Activo', 'Admin_1', '', 'Administrador', NULL),
+(6, '104074', 'AdminBDA', '888-88-88', 'Activo', 'BDA_1', '', 'No asignado', NULL),
+(11, '1040746421', 'Cristian Otero', '55511223', 'Activo', 'Cristian_Otero', '$2y$10$zMr6oImjoS5NIGNuDqEuHORq5lvo5UM0zZi1LeqNHDzpvro/bDNMC', 'Vendedor', 'e82d98c2d4ed5f1e3d96386bc02f9ef176c8a83ffb6fa5fdf621fc1dab9a21c3');
 
 -- --------------------------------------------------------
 
@@ -231,7 +234,7 @@ ALTER TABLE `productos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `Id_Vendedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `Id_Vendedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas`
