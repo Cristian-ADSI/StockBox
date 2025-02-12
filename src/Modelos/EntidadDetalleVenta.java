@@ -3,50 +3,62 @@ package Modelos;
 
 
 public class EntidadDetalleVenta {
-    int Id_DetalleVenta;
-    int Id_Venta;
-    String NroSerie;
-    int  Id_Producto;
-    int Cantidad;
-    float PrecioVenta;
-    String Estado;
+    int     IdDetalleVenta;
+    int     IdVenta;
+    String  NroSerie;
+    int     IdProducto;
+    String  NombreProducto;
+    int     Cantidad;
+    float   PrecioVenta;
+    String  Estado;
     
 
     public EntidadDetalleVenta() {
     }
 
-    public EntidadDetalleVenta(int Id_DetalleVenta, int Id_Venta, int Id_Producto, int Cantidad, float PrecioVenta) {
-        this.Id_DetalleVenta = Id_DetalleVenta;
-        this.Id_Venta = Id_Venta;
-        this.NroSerie = NroSerie;
-        this.Id_Producto = Id_Producto;
-        this.Cantidad = Cantidad;
-        this.PrecioVenta = PrecioVenta;
+    public EntidadDetalleVenta(int IdDetalleVenta, int IdVenta,String NroSerie , int IdProducto, String NombreProducto, int Cantidad, float PrecioVenta) {
+        this.IdDetalleVenta = IdDetalleVenta;
+        this.IdVenta        = IdVenta;
+        this.NroSerie       = NroSerie;
+        this.IdProducto     = IdProducto;
+        this.NombreProducto = NombreProducto;
+        this.Cantidad       = Cantidad;
+        this.PrecioVenta    = PrecioVenta;
     }
 
-    public int getId_DetalleVenta() {
-        return Id_DetalleVenta;
+    public int getIdDetalleVenta() {
+        return IdDetalleVenta;
     }
 
-    public void setId_DetalleVenta(int Id_DetalleVenta) {
-        this.Id_DetalleVenta = Id_DetalleVenta;
+    public void setIdDetalleVenta(int Id_DetalleVenta) {
+        this.IdDetalleVenta = Id_DetalleVenta;
     }
 
-    public int getId_Venta() {
-        return Id_Venta;
+    public int getIdVenta() {
+        return IdVenta;
     }
 
-    public void setId_Venta(int Id_Venta) {
-        this.Id_Venta = Id_Venta;
+    public void setIdVenta(int IdVenta) {
+        this.IdVenta = IdVenta;
     }
 
-    public int getId_Producto() {
-        return Id_Producto;
+    public int getIdProducto() {
+        return IdProducto;
     }
 
-    public void setId_Producto(int Id_Producto) {
-        this.Id_Producto = Id_Producto;
+    public void setIdProducto(int IdProducto) {
+        this.IdProducto = IdProducto;
     }
+
+    public String getNombreProducto() {
+        return NombreProducto;
+    }
+
+    public void setNombreProducto(String NombreProducto) {
+        this.NombreProducto = NombreProducto;
+    }
+    
+    
 
     public String getNroSerie() {
         return NroSerie;

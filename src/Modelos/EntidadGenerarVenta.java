@@ -5,7 +5,7 @@
  */
 package Modelos;
 
-public class EntidadVenta {
+public class EntidadGenerarVenta {
 
     int IdVenta;
     int IdCliente;
@@ -15,10 +15,10 @@ public class EntidadVenta {
     float Monto;
     String Estado;
 
-    public EntidadVenta() {
+    public EntidadGenerarVenta() {
     }
 
-    public EntidadVenta(int IdVenta, int IdCliente, int IdVendedor, String NroSerie, String Fecha, float Monto, String Estado) {
+    public EntidadGenerarVenta(int IdVenta, int IdCliente, int IdVendedor, String NroSerie, String Fecha, float Monto, String Estado) {
         this.IdVenta    = IdVenta;
         this.IdCliente  = IdCliente;
         this.IdVendedor = IdVendedor;

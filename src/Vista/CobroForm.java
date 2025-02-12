@@ -5,10 +5,10 @@
  */
 package Vista;
 
-import Controlador.VentasDAO;
+import Controlador.GenerarVentaDAO;
 import Modelos.EntidadDetalleVenta;
 import Modelos.EntidadUsuario;
-import Modelos.EntidadVenta;
+import Modelos.EntidadGenerarVenta;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import javax.swing.JOptionPane;
@@ -19,9 +19,9 @@ import javax.swing.JOptionPane;
  */
 public class CobroForm extends javax.swing.JFrame {
 
-    EntidadVenta evt = new EntidadVenta();
+    EntidadGenerarVenta evt = new EntidadGenerarVenta();
     EntidadDetalleVenta edv = new EntidadDetalleVenta();
-    VentasDAO venDAO = new VentasDAO();
+    GenerarVentaDAO venDAO = new GenerarVentaDAO();
 
     int X;
     int Y;
@@ -83,9 +83,9 @@ public class CobroForm extends javax.swing.JFrame {
         precio = preci;
         estadoD = est;
 
-        edv.setId_Venta(idVenta);
+        edv.setIdVenta(idVenta);
         edv.setNroSerie(nroSerie);
-        edv.setId_Producto(idProducto);
+        edv.setIdProducto(idProducto);
         edv.setCantidad(cantidad);
         edv.setPrecioVenta(precio);
         edv.setEstado(estadoD);

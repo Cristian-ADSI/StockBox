@@ -3,12 +3,14 @@ package Vista;
 import Controlador.ClienteDAO;
 import Controlador.ProductoDAO;
 import Controlador.UsuarioDAO;
+import Controlador.GenerarVentaDAO;
 import Controlador.VentasDAO;
 import Modelos.EntidadCliente;
 import Modelos.EntidadDetalleVenta;
 import Modelos.EntidadProducto;
 import Modelos.EntidadUsuario;
-import Modelos.EntidadVenta;
+import Modelos.EntidadGenerarVenta;
+import Modelos.EntidadVentas;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -36,10 +38,13 @@ public class Application extends javax.swing.JFrame {
     DefaultTableModel modeloP = new DefaultTableModel();
 
     DefaultTableModel modeloDV = new DefaultTableModel();
-    EntidadDetalleVenta edv = new EntidadDetalleVenta();
+    EntidadDetalleVenta entDetalleVenta = new EntidadDetalleVenta();
     LogingForm lf = new LogingForm();
 
-    VentasDAO vendao = new VentasDAO();
+    GenerarVentaDAO vendao = new GenerarVentaDAO();
+    VentasDAO ventasDAO = new VentasDAO();
+    DefaultTableModel tableModelVentas = new DefaultTableModel();
+
     //==========Variables para el Panel de Ventas========
     int id_Porducto;
     String id_Usuario;
@@ -60,6 +65,7 @@ public class Application extends javax.swing.JFrame {
     int idV;
     int idC;
     int idP;
+    private int idVenta;
     //===========Variables para poder arrastrar el Panel============//
     int X;
     int Y;
@@ -74,10 +80,10 @@ public class Application extends javax.swing.JFrame {
         ListarV();
         ListarC();
         ListarP();
+        listSales();
         GenerarSerie();
         Fecha();
     }
-    
 
     //=========METODOS DE  LOS COLABORADORES===========================/
     void LimpiarTablaV() {
@@ -188,21 +194,21 @@ public class Application extends javax.swing.JFrame {
 
     void ListarC() {
         List<EntidadCliente> lista = cdao.Read();
-        
+
         System.out.println(lista.get(1).getNombre());
-        
+
         modeloC = (DefaultTableModel) tblCliente.getModel();
         Object[] ob = new Object[5];
-        for (int i = 0; i < lista.size(); i++) {      
+        for (int i = 0; i < lista.size(); i++) {
             ob[0] = lista.get(i).getIdCliente();
             ob[1] = lista.get(i).getDNI();
             ob[2] = lista.get(i).getNombre();
             ob[3] = lista.get(i).getDireccion();
             ob[4] = lista.get(i).getEstado();
-            
+
             modeloC.addRow(ob);
         }
-        
+
         tblCliente.setModel(modeloC);
     }
 
@@ -288,6 +294,7 @@ public class Application extends javax.swing.JFrame {
         List<EntidadProducto> lista = pdao.Read();
         modeloP = (DefaultTableModel) tblProductos.getModel();
         Object[] ob = new Object[5];
+
         for (int i = 0; i < lista.size(); i++) {
             ob[0] = lista.get(i).getIdProducto();
             ob[1] = lista.get(i).getNombre();
@@ -575,6 +582,39 @@ public class Application extends javax.swing.JFrame {
     void LogOut() {
     }
 
+    //=================================================================/
+    //=========METODOS DE  LAS VENTAS================================/
+    public void listSales() {
+        ArrayList<EntidadVentas> saleList = VentasDAO.readSales();
+        tableModelVentas = (DefaultTableModel) tblVentas.getModel();
+        Object[] obbjVentas = new Object[6];
+
+        for (int i = 0; i < saleList.size(); i++) {
+            obbjVentas[0] = "000" + saleList.get(i).getIdVenta();
+            obbjVentas[1] = "$" +saleList.get(i).getMonto();
+            obbjVentas[2] = saleList.get(i).getFecha();
+            obbjVentas[3] = saleList.get(i).getEstado();
+            obbjVentas[4] = saleList.get(i).getCliente();
+            obbjVentas[5] = saleList.get(i).getVendedor();
+
+            tableModelVentas.addRow(obbjVentas);
+        }
+        tblVentas.setModel(tableModelVentas);
+    }
+
+    public void listProducts(int SaleId) {
+        String productsDetail = "";
+        ArrayList<EntidadDetalleVenta> listSaleDetails = VentasDAO.searchSaleDetails(SaleId);
+
+        for (int i = 0; i < listSaleDetails.size(); i++) {
+            productsDetail = productsDetail + listSaleDetails.get(i).getNombreProducto() + " - $" + listSaleDetails.get(i).getPrecioVenta() + "\n";
+        }
+        
+        this.txtaProductList_ventas.setText(productsDetail);
+
+    }
+
+    //=================================================================/
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -586,7 +626,7 @@ public class Application extends javax.swing.JFrame {
         txtRole = new javax.swing.JTextField();
         btnLogOut = new javax.swing.JButton();
         PanelPrincipal = new javax.swing.JTabbedPane();
-        PanelVentas = new javax.swing.JPanel();
+        PanelGenerarVenta = new javax.swing.JPanel();
         lblCodCliente = new javax.swing.JLabel();
         txtCodCliente = new javax.swing.JTextField();
         lblConProducto = new javax.swing.JLabel();
@@ -671,6 +711,22 @@ public class Application extends javax.swing.JFrame {
         bgProductos = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblProductos = new javax.swing.JTable();
+        PanelVentas = new javax.swing.JPanel();
+        txtClientName_ventas = new javax.swing.JTextField();
+        lblClientName_Ventas = new javax.swing.JLabel();
+        txtUserName_ventas = new javax.swing.JTextField();
+        lblUserName_ventas = new javax.swing.JLabel();
+        txtDate_ventas = new javax.swing.JTextField();
+        lbdate_ventas = new javax.swing.JLabel();
+        txtMount_ventas = new javax.swing.JTextField();
+        lblMount_ventas = new javax.swing.JLabel();
+        lblStatus_ventas = new javax.swing.JLabel();
+        txtStatus_ventas = new javax.swing.JTextField();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        txtaProductList_ventas = new javax.swing.JTextArea();
+        bgProductos1 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        tblVentas = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -761,89 +817,90 @@ public class Application extends javax.swing.JFrame {
 
         PanelPrincipal.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         PanelPrincipal.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        PanelPrincipal.setPreferredSize(new java.awt.Dimension(1000, 550));
 
-        PanelVentas.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        PanelGenerarVenta.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblCodCliente.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
         lblCodCliente.setForeground(new java.awt.Color(255, 255, 255));
         lblCodCliente.setText("Cod Cliente");
-        PanelVentas.add(lblCodCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
+        PanelGenerarVenta.add(lblCodCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
 
         txtCodCliente.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         txtCodCliente.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        PanelVentas.add(txtCodCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 100, 30));
+        PanelGenerarVenta.add(txtCodCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 100, 30));
 
         lblConProducto.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
         lblConProducto.setForeground(new java.awt.Color(255, 255, 255));
         lblConProducto.setText("Cod Producto");
-        PanelVentas.add(lblConProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, -1));
+        PanelGenerarVenta.add(lblConProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, -1));
 
         txtCodProducto.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         txtCodProducto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        PanelVentas.add(txtCodProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 100, 30));
+        PanelGenerarVenta.add(txtCodProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 100, 30));
 
         lblPrecio.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
         lblPrecio.setForeground(new java.awt.Color(255, 255, 255));
         lblPrecio.setText("Precio");
-        PanelVentas.add(lblPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, -1, -1));
+        PanelGenerarVenta.add(lblPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, -1, -1));
 
         txtPrecio.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         txtPrecio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtPrecio.setEnabled(false);
-        PanelVentas.add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 100, 30));
+        PanelGenerarVenta.add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 100, 30));
 
         lblCantidad.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
         lblCantidad.setForeground(new java.awt.Color(255, 255, 255));
         lblCantidad.setText("Cantidad");
-        PanelVentas.add(lblCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, -1, -1));
+        PanelGenerarVenta.add(lblCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, -1, -1));
 
         spnCantidad.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        PanelVentas.add(spnCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 160, 100, 30));
+        PanelGenerarVenta.add(spnCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 160, 100, 30));
 
         lblCliente.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
         lblCliente.setForeground(new java.awt.Color(255, 255, 255));
         lblCliente.setText("Cliente");
-        PanelVentas.add(lblCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 10, -1, -1));
+        PanelGenerarVenta.add(lblCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 10, -1, -1));
 
         txtCliente.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         txtCliente.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtCliente.setEnabled(false);
-        PanelVentas.add(txtCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 10, 160, 30));
+        PanelGenerarVenta.add(txtCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 10, 160, 30));
 
         lblProducto.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
         lblProducto.setForeground(new java.awt.Color(255, 255, 255));
         lblProducto.setText("Producto");
-        PanelVentas.add(lblProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 60, -1, -1));
+        PanelGenerarVenta.add(lblProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 60, -1, -1));
 
         txtProducto.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         txtProducto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtProducto.setEnabled(false);
-        PanelVentas.add(txtProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 60, 480, 30));
+        PanelGenerarVenta.add(txtProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 60, 480, 30));
 
         lblStock.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
         lblStock.setForeground(new java.awt.Color(255, 255, 255));
         lblStock.setText("Stock");
-        PanelVentas.add(lblStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 10, -1, -1));
+        PanelGenerarVenta.add(lblStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 10, -1, -1));
 
         txtStock.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         txtStock.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtStock.setEnabled(false);
-        PanelVentas.add(txtStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 10, 100, 30));
+        PanelGenerarVenta.add(txtStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 10, 100, 30));
 
         TxtFecha.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         TxtFecha.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         TxtFecha.setEnabled(false);
-        PanelVentas.add(TxtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 10, 110, 30));
+        PanelGenerarVenta.add(TxtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 10, 110, 30));
 
         lblColaborador.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
         lblColaborador.setForeground(new java.awt.Color(255, 255, 255));
         lblColaborador.setText("Vendedor");
-        PanelVentas.add(lblColaborador, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 160, -1, -1));
+        PanelGenerarVenta.add(lblColaborador, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 160, -1, -1));
 
         txtColaborador.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         txtColaborador.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtColaborador.setEnabled(false);
-        PanelVentas.add(txtColaborador, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 160, 160, 30));
+        PanelGenerarVenta.add(txtColaborador, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 160, 160, 30));
 
         btnBuscarclient.setBackground(new java.awt.Color(51, 153, 0));
         btnBuscarclient.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
@@ -856,7 +913,7 @@ public class Application extends javax.swing.JFrame {
                 btnBuscarclientActionPerformed(evt);
             }
         });
-        PanelVentas.add(btnBuscarclient, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, 80, 30));
+        PanelGenerarVenta.add(btnBuscarclient, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, 80, 30));
 
         btnBuscarProduc.setBackground(new java.awt.Color(51, 153, 0));
         btnBuscarProduc.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
@@ -869,7 +926,7 @@ public class Application extends javax.swing.JFrame {
                 btnBuscarProducActionPerformed(evt);
             }
         });
-        PanelVentas.add(btnBuscarProduc, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 60, 80, 30));
+        PanelGenerarVenta.add(btnBuscarProduc, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 60, 80, 30));
 
         btnAgregar.setBackground(new java.awt.Color(212, 172, 13));
         btnAgregar.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
@@ -882,23 +939,23 @@ public class Application extends javax.swing.JFrame {
                 btnAgregarActionPerformed(evt);
             }
         });
-        PanelVentas.add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 110, 80, 30));
+        PanelGenerarVenta.add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 110, 80, 30));
 
         lblNroSerie.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
         lblNroSerie.setForeground(new java.awt.Color(255, 255, 255));
         lblNroSerie.setText("N°  Serie");
-        PanelVentas.add(lblNroSerie, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 110, 70, 20));
+        PanelGenerarVenta.add(lblNroSerie, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 110, 70, 20));
 
         txtNroSerie.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         txtNroSerie.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtNroSerie.setEnabled(false);
-        PanelVentas.add(txtNroSerie, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 110, 160, 30));
+        PanelGenerarVenta.add(txtNroSerie, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 110, 160, 30));
 
         lablVentastext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/VentasText.png"))); // NOI18N
-        PanelVentas.add(lablVentastext, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 150, 170, -1));
+        PanelGenerarVenta.add(lablVentastext, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 150, 170, -1));
 
         bgVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Clientesbg.png"))); // NOI18N
-        PanelVentas.add(bgVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        PanelGenerarVenta.add(bgVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         tblDVentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -910,7 +967,7 @@ public class Application extends javax.swing.JFrame {
         ));
         jScrollPane4.setViewportView(tblDVentas);
 
-        PanelVentas.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 1000, 230));
+        PanelGenerarVenta.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 1000, 230));
 
         BottomPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         BottomPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -951,9 +1008,9 @@ public class Application extends javax.swing.JFrame {
         txtTotal.setEnabled(false);
         BottomPanel.add(txtTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 20, 210, 30));
 
-        PanelVentas.add(BottomPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 440, 1010, 70));
+        PanelGenerarVenta.add(BottomPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 440, 1010, 70));
 
-        PanelPrincipal.addTab("    Generar Ventas    ", PanelVentas);
+        PanelPrincipal.addTab("    Generar Ventas    ", PanelGenerarVenta);
 
         paneColaboradores.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -1289,8 +1346,7 @@ public class Application extends javax.swing.JFrame {
         bgProductos.setBackground(new java.awt.Color(255, 51, 0));
         bgProductos.setForeground(new java.awt.Color(255, 255, 255));
         bgProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Clientesbg.png"))); // NOI18N
-        bgProductos.setText("jLabel3");
-        PanelProductos.add(bgProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 10, -1, -1));
+        PanelProductos.add(bgProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 200));
 
         tblProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1310,6 +1366,101 @@ public class Application extends javax.swing.JFrame {
         PanelProductos.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 1000, 320));
 
         PanelPrincipal.addTab("     Stock de Productos    ", PanelProductos);
+
+        PanelVentas.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        txtClientName_ventas.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtClientName_ventas.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        PanelVentas.add(txtClientName_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 160, 30));
+
+        lblClientName_Ventas.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
+        lblClientName_Ventas.setForeground(new java.awt.Color(255, 255, 255));
+        lblClientName_Ventas.setText("Cliente");
+        PanelVentas.add(lblClientName_Ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
+
+        txtUserName_ventas.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtUserName_ventas.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        PanelVentas.add(txtUserName_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 160, 30));
+
+        lblUserName_ventas.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
+        lblUserName_ventas.setForeground(new java.awt.Color(255, 255, 255));
+        lblUserName_ventas.setText("Vendedor");
+        PanelVentas.add(lblUserName_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, -1));
+
+        txtDate_ventas.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtDate_ventas.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        PanelVentas.add(txtDate_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 160, 30));
+
+        lbdate_ventas.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
+        lbdate_ventas.setForeground(new java.awt.Color(255, 255, 255));
+        lbdate_ventas.setText("Fecha");
+        PanelVentas.add(lbdate_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, -1, -1));
+
+        txtMount_ventas.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtMount_ventas.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        PanelVentas.add(txtMount_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 160, 160, 30));
+
+        lblMount_ventas.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
+        lblMount_ventas.setForeground(new java.awt.Color(255, 255, 255));
+        lblMount_ventas.setText("Monto Total");
+        PanelVentas.add(lblMount_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, -1, -1));
+
+        lblStatus_ventas.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
+        lblStatus_ventas.setForeground(new java.awt.Color(255, 255, 255));
+        lblStatus_ventas.setText("Estado");
+        PanelVentas.add(lblStatus_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 10, -1, -1));
+
+        txtStatus_ventas.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtStatus_ventas.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        PanelVentas.add(txtStatus_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 10, 160, 30));
+
+        txtaProductList_ventas.setColumns(20);
+        txtaProductList_ventas.setRows(5);
+        jScrollPane5.setViewportView(txtaProductList_ventas);
+
+        PanelVentas.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 10, 360, 170));
+
+        bgProductos1.setBackground(new java.awt.Color(255, 51, 0));
+        bgProductos1.setForeground(new java.awt.Color(255, 255, 255));
+        bgProductos1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Clientesbg.png"))); // NOI18N
+        PanelVentas.add(bgProductos1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, -1));
+
+        tblVentas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "No Venta", "Monto ", "Fecha", "Estado", "Cliente", "Vendedor"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblVentas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblVentasMouseClicked(evt);
+            }
+        });
+        jScrollPane6.setViewportView(tblVentas);
+        if (tblVentas.getColumnModel().getColumnCount() > 0) {
+            tblVentas.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        PanelVentas.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 1000, 320));
+
+        PanelPrincipal.addTab("Ventas", PanelVentas);
 
         getContentPane().add(PanelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 1000, 550));
 
@@ -1500,7 +1651,7 @@ public class Application extends javax.swing.JFrame {
                 ListarP();
                 LimpiarVenta();
                 cb.setVisible(true);
-                 
+
             } else {;
                 JOptionPane.showMessageDialog(this, "Operacion Cancelada");
             }
@@ -1524,6 +1675,24 @@ public class Application extends javax.swing.JFrame {
             dispose();
         }
     }//GEN-LAST:event_btnLogOutActionPerformed
+
+    private void tblVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVentasMouseClicked
+        int saleRow = tblVentas.getSelectedRow();
+        
+
+        if (saleRow == -1) {
+            JOptionPane.showMessageDialog(this, "Debe Seleccionar Una Fila");
+        } else {   
+            this.idVenta = Integer.parseInt(tblVentas.getValueAt(saleRow, 0).toString());
+            this.listProducts(this.idVenta);
+            
+            txtMount_ventas.setText(tblVentas.getValueAt(saleRow, 1).toString());
+            txtDate_ventas.setText(tblVentas.getValueAt(saleRow, 2).toString());
+            txtStatus_ventas.setText(tblVentas.getValueAt(saleRow, 3).toString());
+            txtClientName_ventas.setText(tblVentas.getValueAt(saleRow, 4).toString());
+            txtUserName_ventas.setText(tblVentas.getValueAt(saleRow, 5).toString());
+        }
+    }//GEN-LAST:event_tblVentasMouseClicked
 
     public static void main(String args[]) {
 
@@ -1554,6 +1723,7 @@ public class Application extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel BottomPanel;
     private javax.swing.JLabel ClientesText;
+    private javax.swing.JPanel PanelGenerarVenta;
     private javax.swing.JTabbedPane PanelPrincipal;
     private javax.swing.JPanel PanelProductos;
     private javax.swing.JPanel PanelVentas;
@@ -1563,6 +1733,7 @@ public class Application extends javax.swing.JFrame {
     private javax.swing.JLabel bgClientes;
     private javax.swing.JLabel bgColaboradores;
     private javax.swing.JLabel bgProductos;
+    private javax.swing.JLabel bgProductos1;
     private javax.swing.JLabel bgVentas;
     private javax.swing.JButton btnActualizarC;
     private javax.swing.JButton btnActualizarP;
@@ -1594,11 +1765,15 @@ public class Application extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JLabel lablVentastext;
     private javax.swing.JLabel lbDireccionC;
+    private javax.swing.JLabel lbdate_ventas;
     private javax.swing.JLabel lblCantidad;
     private javax.swing.JLabel lblCedulaC;
     private javax.swing.JLabel lblCedulaV;
+    private javax.swing.JLabel lblClientName_Ventas;
     private javax.swing.JLabel lblCliente;
     private javax.swing.JLabel lblCodCliente;
     private javax.swing.JLabel lblColaborador;
@@ -1606,6 +1781,7 @@ public class Application extends javax.swing.JFrame {
     private javax.swing.JLabel lblEstadoC;
     private javax.swing.JLabel lblEstadoP;
     private javax.swing.JLabel lblEstadoV;
+    private javax.swing.JLabel lblMount_ventas;
     private javax.swing.JLabel lblNombreC;
     private javax.swing.JLabel lblNombreP;
     private javax.swing.JLabel lblNombreV;
@@ -1613,9 +1789,11 @@ public class Application extends javax.swing.JFrame {
     private javax.swing.JLabel lblPrecio;
     private javax.swing.JLabel lblPrecioP;
     private javax.swing.JLabel lblProducto;
+    private javax.swing.JLabel lblStatus_ventas;
     private javax.swing.JLabel lblStock;
     private javax.swing.JLabel lblStockP;
     private javax.swing.JLabel lblTelefonoV;
+    private javax.swing.JLabel lblUserName_ventas;
     private javax.swing.JLabel lblUsuarioV;
     private javax.swing.JPanel paneColaboradores;
     private javax.swing.JSpinner spnCantidad;
@@ -1623,14 +1801,18 @@ public class Application extends javax.swing.JFrame {
     private javax.swing.JTable tblColaboradores;
     private javax.swing.JTable tblDVentas;
     private javax.swing.JTable tblProductos;
+    private javax.swing.JTable tblVentas;
     private javax.swing.JPanel topPanel;
     private javax.swing.JTextField txtCedulaC;
     private javax.swing.JTextField txtCedulaV;
+    private javax.swing.JTextField txtClientName_ventas;
     private javax.swing.JTextField txtCliente;
     private javax.swing.JTextField txtCodCliente;
     private javax.swing.JTextField txtCodProducto;
     private javax.swing.JTextField txtColaborador;
+    private javax.swing.JTextField txtDate_ventas;
     private javax.swing.JTextField txtDireccionC;
+    private javax.swing.JTextField txtMount_ventas;
     private javax.swing.JTextField txtNombreC;
     private javax.swing.JTextField txtNombreP;
     private javax.swing.JTextField txtNombreV;
@@ -1639,10 +1821,13 @@ public class Application extends javax.swing.JFrame {
     private javax.swing.JTextField txtPrecioP;
     private javax.swing.JTextField txtProducto;
     private javax.swing.JTextField txtRole;
+    private javax.swing.JTextField txtStatus_ventas;
     private javax.swing.JTextField txtStock;
     private javax.swing.JTextField txtStockP;
     private javax.swing.JTextField txtTelefonoV;
     private javax.swing.JTextField txtTotal;
+    private javax.swing.JTextField txtUserName_ventas;
     private javax.swing.JTextField txtUsuarioV;
+    private javax.swing.JTextArea txtaProductList_ventas;
     // End of variables declaration//GEN-END:variables
 }
