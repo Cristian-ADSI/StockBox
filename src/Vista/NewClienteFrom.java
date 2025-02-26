@@ -1,59 +1,52 @@
-
 package Vista;
 
 import Controlador.ClienteDAO;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import javax.swing.JOptionPane;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.UIManager;
-public class NuevoClienteForm extends javax.swing.JFrame {
 
-    
-    public NuevoClienteForm() {
+public class NewClienteFrom extends javax.swing.JFrame {
+
+    public NewClienteFrom() {
         initComponents();
         this.setLocationRelativeTo(null);
         btnClose.setBackground(new java.awt.Color(0, 0, 0, 0));
         btnMinimize.setBackground(new java.awt.Color(0, 0, 0, 0));
     }
-    
-    ClienteDAO cdao = new ClienteDAO();
-    
-    int X;
-    int Y;
-    
-    void CrearC() {
-        int resp = JOptionPane.showConfirmDialog(this, "Deseas crear un nuevo registro de  Cliente ?");
-        if (resp == 0) {
-            String cedula = txtCedulaC.getText();
-            String nombre = txtNombreC.getText();
-            String direccion = txtDireccionC.getText();
-            String estado = cbxEstadoC.getSelectedItem().toString();
-            Object[] ob = new Object[4];
-            ob[0] = cedula;
-            ob[1] = nombre;
-            ob[2] = direccion;
-            ob[3] = estado;
-            cdao.Create(ob);
-        } else {
-            JOptionPane.showMessageDialog(this, "Operacion Cancelada");
-        }
-        this.setVisible(false);
-        this.dispose();
+
+    ClienteDAO clientesDAO = new ClienteDAO();
+
+    int XWindowPosition;
+    int YWindowPosition;
+
+    private void createCliente() {
+
+        Map<String, String> formData = new HashMap<String, String>();
+
+        formData.put("DNI", txtDNICliente.getText());
+        formData.put("nombre", txtNombreCliente.getText());
+        formData.put("direccion", txtDireccionCliente.getText());
+        formData.put("estado", cbxEstadoCliente.getSelectedItem().toString());
+
+        clientesDAO.createCliente(formData);
     }
-    
+//    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnCrearC = new javax.swing.JButton();
+        btnCrearCliente = new javax.swing.JButton();
         topPanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         btnClose = new javax.swing.JButton();
         btnMinimize = new javax.swing.JButton();
-        txtCedulaC = new javax.swing.JTextField();
-        txtNombreC = new javax.swing.JTextField();
-        txtDireccionC = new javax.swing.JTextField();
-        cbxEstadoC = new javax.swing.JComboBox<>();
+        txtDNICliente = new javax.swing.JTextField();
+        txtNombreCliente = new javax.swing.JTextField();
+        txtDireccionCliente = new javax.swing.JTextField();
+        cbxEstadoCliente = new javax.swing.JComboBox<>();
         lblCedulaC = new javax.swing.JLabel();
         lblNombreC = new javax.swing.JLabel();
         lbDireccionC = new javax.swing.JLabel();
@@ -64,18 +57,18 @@ public class NuevoClienteForm extends javax.swing.JFrame {
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btnCrearC.setBackground(new java.awt.Color(51, 153, 0));
-        btnCrearC.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-        btnCrearC.setForeground(new java.awt.Color(255, 255, 255));
-        btnCrearC.setText("Crear");
-        btnCrearC.setBorder(null);
-        btnCrearC.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnCrearC.addActionListener(new java.awt.event.ActionListener() {
+        btnCrearCliente.setBackground(new java.awt.Color(51, 153, 0));
+        btnCrearCliente.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        btnCrearCliente.setForeground(new java.awt.Color(255, 255, 255));
+        btnCrearCliente.setText("Crear");
+        btnCrearCliente.setBorder(null);
+        btnCrearCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCrearCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCrearCActionPerformed(evt);
+                btnCrearClienteActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCrearC, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 210, 100, 30));
+        getContentPane().add(btnCrearCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 210, 100, 30));
 
         topPanel.setBackground(new java.awt.Color(51, 51, 51));
         topPanel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -133,20 +126,20 @@ public class NuevoClienteForm extends javax.swing.JFrame {
 
         getContentPane().add(topPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 50));
 
-        txtCedulaC.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-        txtCedulaC.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        getContentPane().add(txtCedulaC, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 60, 160, 30));
+        txtDNICliente.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtDNICliente.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        getContentPane().add(txtDNICliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 60, 160, 30));
 
-        txtNombreC.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-        txtNombreC.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        getContentPane().add(txtNombreC, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 110, 160, 30));
+        txtNombreCliente.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtNombreCliente.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        getContentPane().add(txtNombreCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 110, 160, 30));
 
-        txtDireccionC.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-        txtDireccionC.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        getContentPane().add(txtDireccionC, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 160, 160, 30));
+        txtDireccionCliente.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtDireccionCliente.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        getContentPane().add(txtDireccionCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 160, 160, 30));
 
-        cbxEstadoC.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Activo", "Inactivo" }));
-        getContentPane().add(cbxEstadoC, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 210, 160, 30));
+        cbxEstadoCliente.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Activo", "Inactivo" }));
+        getContentPane().add(cbxEstadoCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 210, 160, 30));
 
         lblCedulaC.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
         lblCedulaC.setForeground(new java.awt.Color(255, 255, 255));
@@ -175,7 +168,7 @@ public class NuevoClienteForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-       this.dispose();
+        this.dispose();
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void btnMinimizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMinimizeActionPerformed
@@ -184,41 +177,42 @@ public class NuevoClienteForm extends javax.swing.JFrame {
 
     private void topPanelMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_topPanelMouseDragged
         Point point = MouseInfo.getPointerInfo().getLocation();
-        setLocation(point.x - X, point.y - Y);
+        setLocation(point.x - XWindowPosition, point.y - YWindowPosition);
     }//GEN-LAST:event_topPanelMouseDragged
 
     private void topPanelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_topPanelMousePressed
-        X = evt.getX();
-        Y = evt.getY();
+        XWindowPosition = evt.getX();
+        YWindowPosition = evt.getY();
     }//GEN-LAST:event_topPanelMousePressed
 
-    private void btnCrearCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearCActionPerformed
-        Application pf = new Application();
-        CrearC();
-        pf.LimpiarTablaC();
-        pf.ListarC();      
-    }//GEN-LAST:event_btnCrearCActionPerformed
+    private void btnCrearClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearClienteActionPerformed
 
-   
+        this.createCliente();
+        this.dispose();
+    }//GEN-LAST:event_btnCrearClienteActionPerformed
+
     public static void main(String args[]) {
-       
+
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NuevoClienteForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NewClienteFrom.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NuevoClienteForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NewClienteFrom.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NuevoClienteForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NewClienteFrom.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NuevoClienteForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NewClienteFrom.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
-        /* Create and display the form */
+        /* create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NuevoClienteForm().setVisible(true);
+                new NewClienteFrom().setVisible(true);
             }
         });
     }
@@ -226,17 +220,17 @@ public class NuevoClienteForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel bgVentas1;
     private javax.swing.JButton btnClose;
-    private javax.swing.JButton btnCrearC;
+    private javax.swing.JButton btnCrearCliente;
     private javax.swing.JButton btnMinimize;
-    private javax.swing.JComboBox<String> cbxEstadoC;
+    private javax.swing.JComboBox<String> cbxEstadoCliente;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lbDireccionC;
     private javax.swing.JLabel lblCedulaC;
     private javax.swing.JLabel lblEstadoC;
     private javax.swing.JLabel lblNombreC;
     private javax.swing.JPanel topPanel;
-    private javax.swing.JTextField txtCedulaC;
-    private javax.swing.JTextField txtDireccionC;
-    private javax.swing.JTextField txtNombreC;
+    private javax.swing.JTextField txtDNICliente;
+    private javax.swing.JTextField txtDireccionCliente;
+    private javax.swing.JTextField txtNombreCliente;
     // End of variables declaration//GEN-END:variables
 }

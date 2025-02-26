@@ -10,20 +10,22 @@ import java.util.List;
 
 import Modelos.EntidadUsuario;
 import Vista.Mensaje;
+import java.util.Map;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class UsuarioDAO implements CRUD {
 
-    Conexion conexion           = new Conexion();
-    Mensaje message             = new Mensaje();
+    Conexion conexion = new Conexion();
+    Mensaje message = new Mensaje();
 
     PreparedStatement prepStatement;
     ResultSet resSet;
     Connection connection = conexion.Conectar();
-    
 
-    public EntidadUsuario getUserData(String DNI, String user) {
+    public EntidadUsuario getUsuarioData(String DNI, String user) {
 
-        EntidadUsuario entUsuario   = new EntidadUsuario();
+        EntidadUsuario entUsuario = new EntidadUsuario();
         String SQLQuery = "SELECT * FROM usuarios WHERE DNI=? AND Usuario=? ";
 
         try {
@@ -36,11 +38,11 @@ public class UsuarioDAO implements CRUD {
 
             while (resSet.next()) {
                 entUsuario.setIdUsuario(resSet.getString(1));
-                entUsuario.setDNI(      resSet.getString(2));
-                entUsuario.setNombre(   resSet.getString(3));
-                entUsuario.setStatus(   resSet.getString(5));
-                entUsuario.setUsuario(  resSet.getString(6));
-                entUsuario.setRole(     resSet.getString(7));
+                entUsuario.setDNI(resSet.getString(2));
+                entUsuario.setNombre(resSet.getString(3));
+                entUsuario.setStatus(resSet.getString(5));
+                entUsuario.setUsuario(resSet.getString(6));
+                entUsuario.setRole(resSet.getString(8));
             }
         } catch (SQLException error) {
             String text = "Error en el metodo UsuarioDAO.getUserData: ";
@@ -50,115 +52,199 @@ public class UsuarioDAO implements CRUD {
         return entUsuario;
     }
 
+    public DefaultTableModel listUsuariosOnTable(JTable tableUsuarios) {
+        DefaultTableModel tableModelUsuario = new DefaultTableModel();
+
+        List<EntidadUsuario> listUsuarios = this.read();
+        tableModelUsuario = (DefaultTableModel) tableUsuarios.getModel();
+        Object[] ob = new Object[6];
+
+        for (int i = 0; i < listUsuarios.size(); i++) {
+            ob[0] = listUsuarios.get(i).getIdUsuario();
+            ob[1] = listUsuarios.get(i).getDNI();
+            ob[2] = listUsuarios.get(i).getNombre();
+            ob[3] = listUsuarios.get(i).getTelefono();
+            ob[4] = listUsuarios.get(i).getStatus();
+            ob[5] = listUsuarios.get(i).getUsuario();
+
+            tableModelUsuario.addRow(ob);
+        }
+
+        return tableModelUsuario;
+    }
+
     @Override
-    public List Read() {
-        
+    public List read() {
 
         List<EntidadUsuario> usersList = new ArrayList<>();
-        
-        String SQLQuery = "SELECT * FROM usuarios";
-        
+
+        String SQLQuery = "select * from usuarios";
+
         try {
-            
+
             prepStatement = connection.prepareStatement(SQLQuery);
             resSet = prepStatement.executeQuery();
-            
+
             while (resSet.next()) {
-                EntidadUsuario entUsuario   = new EntidadUsuario();
-                
+                EntidadUsuario entUsuario = new EntidadUsuario();
+
                 entUsuario.setIdUsuario(resSet.getString(1));
-                entUsuario.setDNI(      resSet.getString(2));
-                entUsuario.setNombre(   resSet.getString(3));
-                entUsuario.setTelefono( resSet.getString(4));
-                entUsuario.setStatus(   resSet.getString(5));
-                entUsuario.setUsuario(  resSet.getString(6));
-                
+                entUsuario.setDNI(resSet.getString(2));
+                entUsuario.setNombre(resSet.getString(3));
+                entUsuario.setTelefono(resSet.getString(4));
+                entUsuario.setStatus(resSet.getString(5));
+                entUsuario.setUsuario(resSet.getString(6));
+
                 usersList.add(entUsuario);
             }
         } catch (SQLException error) {
-            
-            String text ="Eror en el Metodo UsuarioDAO.Read usuarios: ";
-            message.errorInSQLQuery(text, error);            
+
+            String text = "Eror en el Metodo UsuarioDAO.Read usuarios: ";
+            message.errorInSQLQuery(text, error);
         }
-        
+
         return usersList;
     }
 
-    @Override
-    public int Create(Object[] ob) {
-        
-        int queryResult = 0;
-        
-        String SQLQuery = "INSERT INTO usuarios (Cedula, Nombre, Telefono, Estado, User_2) VALUES(?,?,?,?,?)";
-        
-        try {
-            
-            prepStatement = connection.prepareStatement(SQLQuery);
-            prepStatement.setObject(1, ob[0]);
-            prepStatement.setObject(2, ob[1]);
-            prepStatement.setObject(3, ob[2]);
-            prepStatement.setObject(4, ob[3]);
-            prepStatement.setObject(5, ob[4]);
-            
-            queryResult = prepStatement.executeUpdate();
-            message.userCreatedSuccessfully();
-            
-        } catch (SQLException error) {
-            
-            String text ="Eror en el metodo getUserData.Create usuarios: ";
+    public void createUsuario(Map formData) {
 
-            message.userCreationFailed();
-            message.errorInSQLQuery(text, error);
+        boolean queryResult = false;
+
+        int confirmation = this.message.usuarioCreateConfirmation();
+
+        if (confirmation == 0) {
+
+            queryResult = this.create(formData);
+        } else {
+            this.message.operationCanceled();
         }
-        return queryResult;
+
+        if (queryResult) {
+            message.usuarioCreatedSuccessfully();
+        }
     }
 
     @Override
-    public int Update(Object[] ob) {
-        int queryResult = 0;
-        
-        String SQLQuery = "UPDATE usuarios SET Cedula=?, Nombre=?, Telefono=?, Estado=?, User_2=? WHERE Id_Vendedor=? ";
-        try {
-           
-            prepStatement = connection.prepareStatement(SQLQuery);
-            prepStatement.setObject(1, ob[0]);
-            prepStatement.setObject(2, ob[1]);
-            prepStatement.setObject(3, ob[2]);
-            prepStatement.setObject(4, ob[3]);
-            prepStatement.setObject(5, ob[4]);
-            prepStatement.setObject(6, ob[5]);
-            
-            queryResult = prepStatement.executeUpdate();
-            message.userUpdatedSuccessfully();
-            
-        } catch (SQLException error) {
-            
-            String text ="Eror en el Metodo UsuarioDAO.Update usuarios: ";
-            message.userUpdateFailed();
-            message.errorInSQLQuery(text, error);
-        }
-        
-        return queryResult;
-    }
+    public boolean create(Map formData) {
 
-    @Override
-    public void Delete(int id) {
-        
-        String SQLQuery = "DELETE FROM usuarios WHERE Id_Vendedor=?";
-        try {
+        boolean queryResult;
 
+        String SQLQuery = "insert into usuarios (DNI, Nombre, Telefono, Estado, Usuario) values(?,?,?,?,?)";
+
+        try {
             prepStatement = connection.prepareStatement(SQLQuery);
-            prepStatement.setInt(1, id);
+            prepStatement.setObject(1, formData.get("DNI"));
+            prepStatement.setObject(2, formData.get("nombre"));
+            prepStatement.setObject(3, formData.get("telefono"));
+            prepStatement.setObject(4, formData.get("estado"));
+            prepStatement.setObject(5, formData.get("usuario"));
+
             prepStatement.executeUpdate();
-            
-            message.userDeletdSuccessfully();
-            
+            queryResult = true;
+
         } catch (SQLException error) {
-   
-            
-            String text ="Error en el Metodo UsuarioDAO.Eliminar usuario: ";
-            message.userDeleteFailed();
+            queryResult = false;
+
+            String text = "Eror en el metodo getUserData.Create: ";
+            message.usuarioCreateFailed();
             message.errorInSQLQuery(text, error);
         }
+
+        return queryResult;
     }
+
+    public void updateUsuario(int selectedRow, Map formData) {
+        int queryResult = 0;
+        int confirmation = 1;
+
+        if (selectedRow == -1) {
+            message.noSelectedRow();
+        } else {
+            confirmation = message.usuarioUpdateConfirmation();
+        }
+
+        if (confirmation == 0) {
+            queryResult = this.update(formData);
+        } else {
+            message.operationCanceled();
+        }
+
+        if (queryResult == 1) {
+            message.usuarioUpdatedSuccessfully();
+        }
+    }
+
+    @Override
+    public int update(Map formData) {
+
+        int queryResult = 0;
+        String SQLQuery = "update `usuarios` set DNI=?, Nombre=?, Telefono=?, Estado=?, Usuario=? where IdUsuario=? ";
+
+        try {
+
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setObject(1, formData.get("DNI"));
+            prepStatement.setObject(2, formData.get("nombre"));
+            prepStatement.setObject(3, formData.get("telefono"));
+            prepStatement.setObject(4, formData.get("estado"));
+            prepStatement.setObject(5, formData.get("usuario"));
+            prepStatement.setObject(6, formData.get("idUsuario"));
+
+            queryResult = prepStatement.executeUpdate();
+
+        } catch (SQLException error) {
+
+            String text = "Eror en el Metodo UsuarioDAO.Update: ";
+            message.usuarioUpdateFailed();
+            message.errorInSQLQuery(text, error);
+        }
+
+        return queryResult;
+    }
+
+    public void deleteUsuario(int selectedRow, int tableRowIdUsuario) {
+
+        int queryResult = 0;
+        int confirmation = 1;
+
+        if (selectedRow == -1) {
+            message.noSelectedRow();
+        } else {
+            confirmation = message.usuarioDeleteConfirmation();
+        }
+
+        if (confirmation == 0 && selectedRow > -1) {
+            queryResult = this.delete(tableRowIdUsuario);
+        } else {
+            message.operationCanceled();
+        }
+
+        if (queryResult == 1) {
+            message.usuarioDeletedSuccessfully();
+        }
+
+    }
+
+    @Override
+    public int delete(int tableRowIdUsuario) {
+
+        int queryResult = 0;
+
+        String SQLQuery = "delete from `usuarios` where IdUsuario = ?";
+        try {
+
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setInt(1, tableRowIdUsuario);
+            queryResult = prepStatement.executeUpdate();
+
+        } catch (SQLException error) {
+
+            String text = "Error en el Metodo UsuarioDAO.delete usuario: ";
+            message.usuarioDeleteFailed();
+            message.errorInSQLQuery(text, error);
+        }
+
+        return queryResult;
+    }
+
 }

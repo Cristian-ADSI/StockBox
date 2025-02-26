@@ -33,57 +33,113 @@ public class Mensaje {
         System.err.println(text);
         System.err.println(error);
     }
-
-    public void userCreatedSuccessfully() {
-
-        JOptionPane.showMessageDialog(null, "Usuario creado correctamente");
-    }
-
-    public void userUpdatedSuccessfully() {
+//==========================================
+    public void usuarioUpdatedSuccessfully() {
 
         JOptionPane.showMessageDialog(null, "Usuario actualizado correctamente");
     }
-
-    public void userDeletdSuccessfully() {
-
-        JOptionPane.showMessageDialog(null, "Usuario eliminado correctamente");
-    }
-
-    public void userCreationFailed() {
-
-        JOptionPane.showMessageDialog(null, "No se pudo crear el usuario, verifique que los campos tengan valores validos");
-    }
-
-    public void userUpdateFailed() {
+    public void usuarioUpdateFailed() {
 
         JOptionPane.showMessageDialog(null, "No se pudo actualizar el usuario, error a nivel de sistema");
     }
+    public int  usuarioUpdateConfirmation() {
 
-    public void userDeleteFailed() {
-
-        JOptionPane.showMessageDialog(null, "No se pudo eliminar el usuario, error a nivel de sistema");
+        return JOptionPane.showConfirmDialog(null, "Estas seguro que deseas actualizar el usuario seleccionado?");
     }
 
-    public void productCreatedSuccessfully() {
+    public void usuarioDeletedSuccessfully() {
+
+        JOptionPane.showMessageDialog(null, "Usuario eliminado correctamente");
+    }
+    public void usuarioDeleteFailed() {
+
+        JOptionPane.showMessageDialog(null, "No se pudo eliminar el Usuario, error a nivel de sistema");
+    }
+    public int  usuarioDeleteConfirmation(){
+        return JOptionPane.showConfirmDialog(null, "Estas seguro que deseas eliminar el Usuario seleccionado?");
+    }
+    
+    
+    public void usuarioCreatedSuccessfully() {
+
+        JOptionPane.showMessageDialog(null, "Usuario creado correctamente");
+    }
+    public void usuarioCreateFailed() {
+
+        JOptionPane.showMessageDialog(null, "No se pudo crear el usuario, error a nivel de sistema");
+    }
+    public int  usuarioCreateConfirmation() {
+        return JOptionPane.showConfirmDialog(null, "Deseas crear un nuevo registor de Empleado?");
+    }
+//==========================================
+    
+    public void clienteSearchFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo encontrar cliente. error de sistema");
+    }
+    public void clienteReadFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo listar clientes. error de sistema");
+    }
+    public void clienteDNIEmpty(){
+        JOptionPane.showMessageDialog(null, "Debe Ingresar el DNI del Cliente");
+    }
+    public int clienteRegisterConfirmation(){
+        return JOptionPane.showConfirmDialog(null, "Cliente No Registrado.\nDesea Registrarlo?");
+    }
+    
+    public void clienteUpdateSuccessfully() {
+
+        JOptionPane.showMessageDialog(null, "Cliente actualizado correctamente");
+    }
+    public void clienteUpdateFailed() {
+
+        JOptionPane.showMessageDialog(null, "No se pudo actualizar el Cliente, error a nivel de sistema");
+    }
+    public int  clienteUpdateConfirmation(){
+        return JOptionPane.showConfirmDialog(null, "Estas seguro que deseas actualizar el Cliente seleccionado?");
+    }
+    
+    public void clienteDeletedSuccessfully() {
+        JOptionPane.showMessageDialog(null, "Cliente elminado con exito");
+    }
+    public void clienteDeleteFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo eliminar el cliente. error de sistema");
+    }
+    public int  clienteDeleteConfirmation() {
+        return JOptionPane.showConfirmDialog(null, "Estas seguro que deseas eliminar el Cliente seleccionado?");
+    }
+    
+    
+    public void clienteCreatedSuccessfully() {
+        JOptionPane.showMessageDialog(null, "Cliente creado con exito");
+    }
+    public void ClienteCreateFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo crear el cliente. error de sistema");
+    }
+    public int  clientesCreateConfirmation() {
+        return JOptionPane.showConfirmDialog(null, "Deseas crear un nuevo registor de Cliente? ?");
+    }
+    
+ //    =================================================================   
+    public void productoCreateSuccessfully() {
         JOptionPane.showMessageDialog(null, "Producto creado  correctamente");
     }
-
-    public void productUpdatedSuccessfully() {
+    public void productoCreateFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo crear el Producto, error a nivel de sistema");
+    }
+    public int  productoCreateConfirmation() {
+        return JOptionPane.showConfirmDialog(null, "Deseas agregar un nuevo Producto?");
+    }
+    
+    public void productoUpdatedSuccessfully() {
         JOptionPane.showMessageDialog(null, "Producto actualizado  correctamente");
     }
-
-    public void productDeletedSuccessfully() {
-        JOptionPane.showMessageDialog(null, "Producto eliminado  correctamente");
+    public void productoUpdateFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo actualizar el Producto, error a nivel de sistema");
+    } 
+    public int  productoUpdateConfirmation() {
+        return JOptionPane.showConfirmDialog(null, "Deseas actualizar el Producto seleccionado?");
     }
-
-    public void productCreateFailed() {
-        JOptionPane.showMessageDialog(null, "No se pudo crear el producto, error a nivel de sistema");
-    }
-
-    public void productUpdateFailed() {
-        JOptionPane.showMessageDialog(null, "No se pudo actualizar el producto, error a nivel de sistema");
-    }
-
+    
     public void stockUpdateFailed() {
 
         JOptionPane.showMessageDialog(null, "No se pudo actualizar el Stock, error a nivel de sistema");
@@ -97,9 +153,17 @@ public class Mensaje {
         JOptionPane.showMessageDialog(null, "No se pudo cargar los productos, error a nivel de sistema");
     }
 
+    public void productoDeletedSuccessfully() {
+        JOptionPane.showMessageDialog(null, "Producto eliminado  correctamente");
+    }
     public void productDeleteFailed() {
         JOptionPane.showMessageDialog(null, "No se pudo eliminar el producto, error a nivel de sistema");
     }
+    public int  productoDeleteConfirmation() {
+        return JOptionPane.showConfirmDialog(null, "Deseas eliminar el Producto seleccionado?");
+    }
+
+//    =================================================================
 
     public void saleCanceledSuccessfully() {
         JOptionPane.showMessageDialog(null, "Venta Cancelada Correctamente");
@@ -129,35 +193,17 @@ public class Mensaje {
         JOptionPane.showMessageDialog(null, "No se pudo cargar el numero de serie. error de sistema");
     }
 
-    public void searchCustomerFailed() {
-        JOptionPane.showMessageDialog(null, "No se pudo encontrar cliente. error de sistema");
+
+   
+//    ========================================================
+    public void noSelectedRow(){
+        JOptionPane.showMessageDialog(null, "Debes seleccionar un registro de la tabla");
+    }
+    public void operationCanceled() {
+        JOptionPane.showMessageDialog(null, "Operacion Cancelada");
+    }
+    public void emptyFields(){
+        JOptionPane.showMessageDialog(null, "No se pudo realizar la operacion, verifique que los campos tengan valores validos");
     }
 
-    public void readCustomersFailed() {
-        JOptionPane.showMessageDialog(null, "No se pudo listar clientes. error de sistema");
-    }
-
-    public void createCustomerSuccess() {
-        JOptionPane.showMessageDialog(null, "Cliente creado con exito");
-    }
-
-    public void createCustomerFailed() {
-        JOptionPane.showMessageDialog(null, "No se pudo crear el cliente. error de sistema");
-    }
-
-    public void updateCustomerSuccess() {
-        JOptionPane.showMessageDialog(null, "Cliente actualizado con exito");
-    }
-
-    public void updateCustomerFailed() {
-        JOptionPane.showMessageDialog(null, "No se pudo actuializar el cliente. error de sistema");
-    }
-
-    public void deleteCustomerSuccess() {
-        JOptionPane.showMessageDialog(null, "Cliente elminado con exito");
-    }
-
-    public void deleteCustomerFailed() {
-        JOptionPane.showMessageDialog(null, "No se pudo eliminar el cliente. error de sistema");
-    }
-}
+}   

@@ -35,13 +35,13 @@ public class LogingForm extends javax.swing.JFrame {
             //Get User Data from DB
             String[] userData   = getUserData(passwordInput, userInput);
             String idUser       = userData[0];
-            String DNI       = userData[0];
+            String DNI          = userData[1];
             String status       = userData[4];
             String user         = userData[5];
             String role         = userData[6];
             
 
-            //Cehck User data
+            //Check User data
             invalidUser     = checkInvalidUser(DNI, user);
             invalidStatus   = checkInvalidStatus(status, role);
             
@@ -72,14 +72,14 @@ public class LogingForm extends javax.swing.JFrame {
         btnMinimize.setBackground(new java.awt.Color(0, 0, 0, 0));
         txtUser.setBackground(new java.awt.Color(0, 0, 0, 4));
         txtPassword.setBackground(new java.awt.Color(0, 0, 0, 1));
-        txtUser.setText("Empleado_1");
-        txtPassword.setText("123456");
+        txtUser.setText("Admin_1");
+        txtPassword.setText("746421");
         this.setLocationRelativeTo(null);
     }
     
     private String[] getUserData(String passwordInput, String userInput) {
         
-        entUsuario = usrDAO.getUserData(passwordInput, userInput);
+        entUsuario = usrDAO.getUsuarioData(passwordInput, userInput);
         
         String[] userData = {
             entUsuario.getIdUsuario() + "", //Posicion 0
@@ -149,6 +149,7 @@ public class LogingForm extends javax.swing.JFrame {
         btnClose = new javax.swing.JButton();
         btnMinimize = new javax.swing.JButton();
         pnlTopPanel = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         bgLogin = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -246,6 +247,21 @@ public class LogingForm extends javax.swing.JFrame {
 
         jPanel1.add(pnlTopPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 310, 60));
 
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 160, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 50, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 650, 160, 50));
+
         bgLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bgLogin_2.png"))); // NOI18N
         jPanel1.add(bgLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
@@ -301,7 +317,7 @@ public class LogingForm extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        /* create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new LogingForm().setVisible(true);
@@ -318,6 +334,7 @@ public class LogingForm extends javax.swing.JFrame {
     private javax.swing.JButton btnConect;
     private javax.swing.JButton btnMinimize;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel pnlTopPanel;
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUser;

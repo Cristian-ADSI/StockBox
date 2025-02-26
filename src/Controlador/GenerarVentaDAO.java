@@ -136,7 +136,7 @@ public class GenerarVentaDAO {
     public String getMaxSerialNumber() {
         
         String NroSerie = "";
-        String SQLQuery = "SELECT MAX(Serie) FROM ventas";
+        String SQLQuery = "select MAX(Serie) from `ventas`";
         
         try {
             prepStatement = connection.prepareStatement(SQLQuery);
