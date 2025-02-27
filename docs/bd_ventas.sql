@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-02-2025 a las 15:47:11
+-- Tiempo de generación: 27-02-2025 a las 01:14:10
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -29,6 +29,7 @@ USE `bd_ventas`;
 -- Estructura de tabla para la tabla `clientes`
 --
 
+DROP TABLE IF EXISTS `clientes`;
 CREATE TABLE `clientes` (
   `IdCliente` int(11) NOT NULL,
   `DNI` int(15) NOT NULL,
@@ -48,9 +49,7 @@ INSERT INTO `clientes` (`IdCliente`, `DNI`, `Nombre`, `Direccion`, `Estado`) VAL
 (4, 777555111, 'Jesica Parker', 'Av Las flores 45', 'Activo'),
 (5, 754333214, 'Edwar James', 'Av Lancaster', 'Activo'),
 (7, 777444555, 'Hector Saldarriaga', 'Cll Travesias', 'Inactivo'),
-(8, 444777999, 'Pablo Perez', 'Calle Las Florez', 'Inactivo'),
-(10, 775522777, 'Eric Stone', 'Av newville 458', 'Activo'),
-(11, 999111777, 'Emily Vanegas', 'Cll Villa Diego 87', 'Activo');
+(8, 444777999, 'Pablo Perez', 'Calle Las Florez', 'Inactivo');
 
 -- --------------------------------------------------------
 
@@ -58,9 +57,10 @@ INSERT INTO `clientes` (`IdCliente`, `DNI`, `Nombre`, `Direccion`, `Estado`) VAL
 -- Estructura de tabla para la tabla `detalle_ventas`
 --
 
+DROP TABLE IF EXISTS `detalle_ventas`;
 CREATE TABLE `detalle_ventas` (
-  `Id_Detalle` int(11) NOT NULL,
-  `Id_Venta` int(11) NOT NULL,
+  `IdDetalleVenta` int(11) NOT NULL,
+  `IdVenta` int(11) NOT NULL,
   `NroSerie` varchar(255) NOT NULL,
   `Producto` int(11) NOT NULL,
   `Cantidad` int(11) NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE `detalle_ventas` (
 -- Volcado de datos para la tabla `detalle_ventas`
 --
 
-INSERT INTO `detalle_ventas` (`Id_Detalle`, `Id_Venta`, `NroSerie`, `Producto`, `Cantidad`, `PrecUnidad`, `Estado`) VALUES
+INSERT INTO `detalle_ventas` (`IdDetalleVenta`, `IdVenta`, `NroSerie`, `Producto`, `Cantidad`, `PrecUnidad`, `Estado`) VALUES
 (3, 2, '0002', 1, 1, 9999.99, 'Cancelada'),
 (4, 2, '0002', 1, 1, 9999.99, 'Cancelada'),
 (5, 2, '0002', 1, 1, 9999.99, 'Cancelada'),
@@ -95,6 +95,7 @@ INSERT INTO `detalle_ventas` (`Id_Detalle`, `Id_Venta`, `NroSerie`, `Producto`, 
 -- Estructura de tabla para la tabla `productos`
 --
 
+DROP TABLE IF EXISTS `productos`;
 CREATE TABLE `productos` (
   `IdProducto` int(11) NOT NULL,
   `Nombre` varchar(50) NOT NULL,
@@ -119,15 +120,16 @@ INSERT INTO `productos` (`IdProducto`, `Nombre`, `Precio`, `Stock`, `Estado`) VA
 -- Estructura de tabla para la tabla `usuarios`
 --
 
+DROP TABLE IF EXISTS `usuarios`;
 CREATE TABLE `usuarios` (
-  `Id_Vendedor` int(11) NOT NULL,
-  `DNI` varchar(11) NOT NULL,
+  `IdUsuario` int(11) NOT NULL,
+  `DNI` varchar(20) NOT NULL,
   `Nombre` varchar(50) NOT NULL,
   `Telefono` varchar(20) NOT NULL,
-  `Estado` varchar(10) NOT NULL,
-  `Usuario` varchar(15) NOT NULL,
-  `Contrasena` varchar(255) NOT NULL,
-  `Roll` varchar(15) DEFAULT 'No asignado',
+  `Estado` enum('Activo','Inactivo') NOT NULL,
+  `Usuario` varchar(20) NOT NULL,
+  `Contrasena` varchar(255) DEFAULT NULL,
+  `Role` varchar(20) DEFAULT 'No asignado',
   `Token` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -135,12 +137,9 @@ CREATE TABLE `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`Id_Vendedor`, `DNI`, `Nombre`, `Telefono`, `Estado`, `Usuario`, `Contrasena`, `Roll`, `Token`) VALUES
+INSERT INTO `usuarios` (`IdUsuario`, `DNI`, `Nombre`, `Telefono`, `Estado`, `Usuario`, `Contrasena`, `Role`, `Token`) VALUES
 (1, '123456', 'Prueba_1', '555-58-88', 'Activo', 'Empleado_1', '', 'Vendedor', NULL),
-(2, '455122', 'Prueba_2', '888-55-44', 'Inactivo', 'Empleado_2', '', 'Vendedor', NULL),
-(5, '746421', 'Admin_1', '777-77-77', 'Activo', 'Admin_1', '', 'Administrador', NULL),
-(6, '104074', 'AdminBDA', '888-88-88', 'Activo', 'BDA_1', '', 'No asignado', NULL),
-(11, '1040746421', 'Cristian Otero', '55511223', 'Activo', 'Cristian_Otero', '$2y$10$zMr6oImjoS5NIGNuDqEuHORq5lvo5UM0zZi1LeqNHDzpvro/bDNMC', 'Vendedor', 'e82d98c2d4ed5f1e3d96386bc02f9ef176c8a83ffb6fa5fdf621fc1dab9a21c3');
+(5, '746421', 'Admin_1', '777-77-77', 'Activo', 'Admin_1', '', 'Administrador', NULL);
 
 -- --------------------------------------------------------
 
@@ -148,12 +147,13 @@ INSERT INTO `usuarios` (`Id_Vendedor`, `DNI`, `Nombre`, `Telefono`, `Estado`, `U
 -- Estructura de tabla para la tabla `ventas`
 --
 
+DROP TABLE IF EXISTS `ventas`;
 CREATE TABLE `ventas` (
-  `Id_venta` int(11) NOT NULL,
+  `Idventa` int(11) NOT NULL,
   `Cliente` int(11) DEFAULT NULL,
   `Vendedor` int(11) DEFAULT NULL,
   `Serie` int(255) NOT NULL,
-  `Fecha_Venta` date NOT NULL,
+  `FechaVenta` date NOT NULL,
   `Monto` float NOT NULL,
   `Estado` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -162,13 +162,67 @@ CREATE TABLE `ventas` (
 -- Volcado de datos para la tabla `ventas`
 --
 
-INSERT INTO `ventas` (`Id_venta`, `Cliente`, `Vendedor`, `Serie`, `Fecha_Venta`, `Monto`, `Estado`) VALUES
+INSERT INTO `ventas` (`Idventa`, `Cliente`, `Vendedor`, `Serie`, `FechaVenta`, `Monto`, `Estado`) VALUES
 (2, 8, 5, 2, '2021-04-06', 30000, 'Cancelada'),
 (3, 1, 1, 3, '2021-04-06', 810000, 'Efectiva'),
 (4, 4, 1, 4, '2021-04-06', 30000, 'Efectiva'),
 (5, 4, 1, 5, '2021-04-06', 270000, 'Efectiva'),
 (6, 8, 1, 6, '2021-04-06', 2430000, 'Efectiva'),
 (7, 3, 1, 7, '2021-04-07', 585000, 'Efectiva');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `view_detalle_ventas`
+-- (Véase abajo para la vista actual)
+--
+DROP VIEW IF EXISTS `view_detalle_ventas`;
+CREATE TABLE `view_detalle_ventas` (
+`IdDetalleVenta` int(11)
+,`IdVenta` int(11)
+,`NroSerie` varchar(255)
+,`Producto` int(11)
+,`Nombre` varchar(50)
+,`Cantidad` int(11)
+,`precio` float
+,`Estado` varchar(15)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `view_ventas`
+-- (Véase abajo para la vista actual)
+--
+DROP VIEW IF EXISTS `view_ventas`;
+CREATE TABLE `view_ventas` (
+`Cliente` varchar(50)
+,`Vendedor` varchar(50)
+,`IdVenta` int(11)
+,`FechaVenta` date
+,`Monto` float
+,`Estado` varchar(10)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `view_detalle_ventas`
+--
+DROP TABLE IF EXISTS `view_detalle_ventas`;
+
+DROP VIEW IF EXISTS `view_detalle_ventas`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_detalle_ventas`  AS SELECT `dv`.`IdDetalleVenta` AS `IdDetalleVenta`, `dv`.`IdVenta` AS `IdVenta`, `dv`.`NroSerie` AS `NroSerie`, `dv`.`Producto` AS `Producto`, `p`.`Nombre` AS `Nombre`, `dv`.`Cantidad` AS `Cantidad`, `p`.`Precio` AS `precio`, `dv`.`Estado` AS `Estado` FROM (`detalle_ventas` `dv` join `productos` `p` on(`dv`.`Producto` = `p`.`IdProducto`)) ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `view_ventas`
+--
+DROP TABLE IF EXISTS `view_ventas`;
+
+DROP VIEW IF EXISTS `view_ventas`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_ventas`  AS SELECT `c`.`Nombre` AS `Cliente`, `u`.`Nombre` AS `Vendedor`, `v`.`Idventa` AS `IdVenta`, `v`.`FechaVenta` AS `FechaVenta`, `v`.`Monto` AS `Monto`, `v`.`Estado` AS `Estado` FROM ((`ventas` `v` join `clientes` `c` on(`v`.`Cliente` = `c`.`IdCliente`)) join `usuarios` `u` on(`v`.`Vendedor` = `u`.`IdUsuario`)) ;
 
 --
 -- Índices para tablas volcadas
@@ -184,9 +238,9 @@ ALTER TABLE `clientes`
 -- Indices de la tabla `detalle_ventas`
 --
 ALTER TABLE `detalle_ventas`
-  ADD PRIMARY KEY (`Id_Detalle`),
+  ADD PRIMARY KEY (`IdDetalleVenta`),
   ADD KEY `FK_IDPROUDUCTO_PRODUCTOS` (`Producto`),
-  ADD KEY `FK_IDVENTA_VENTA` (`Id_Venta`);
+  ADD KEY `FK_IDVENTA_VENTA` (`IdVenta`);
 
 --
 -- Indices de la tabla `productos`
@@ -198,13 +252,13 @@ ALTER TABLE `productos`
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`Id_Vendedor`);
+  ADD PRIMARY KEY (`IdUsuario`);
 
 --
 -- Indices de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  ADD PRIMARY KEY (`Id_venta`),
+  ADD PRIMARY KEY (`Idventa`),
   ADD KEY `Cliente` (`Cliente`),
   ADD KEY `Vendedor` (`Vendedor`);
 
@@ -216,31 +270,31 @@ ALTER TABLE `ventas`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `IdCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `IdCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_ventas`
 --
 ALTER TABLE `detalle_ventas`
-  MODIFY `Id_Detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `IdDetalleVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `IdProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `IdProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `Id_Vendedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `IdUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `Id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `Idventa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Restricciones para tablas volcadas
@@ -251,14 +305,14 @@ ALTER TABLE `ventas`
 --
 ALTER TABLE `detalle_ventas`
   ADD CONSTRAINT `FK_IDPROUDUCTO_PRODUCTOS` FOREIGN KEY (`Producto`) REFERENCES `productos` (`IdProducto`),
-  ADD CONSTRAINT `FK_IDVENTA_VENTA` FOREIGN KEY (`Id_Venta`) REFERENCES `ventas` (`Id_venta`);
+  ADD CONSTRAINT `FK_IDVENTA_VENTA` FOREIGN KEY (`IdVenta`) REFERENCES `ventas` (`Idventa`);
 
 --
 -- Filtros para la tabla `ventas`
 --
 ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`Cliente`) REFERENCES `clientes` (`IdCliente`),
-  ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`Vendedor`) REFERENCES `usuarios` (`Id_Vendedor`);
+  ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`Vendedor`) REFERENCES `usuarios` (`IdUsuario`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
