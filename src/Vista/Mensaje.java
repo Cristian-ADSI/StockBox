@@ -82,7 +82,7 @@ public class Mensaje {
     public void clienteDNIEmpty(){
         JOptionPane.showMessageDialog(null, "Debe Ingresar el DNI del Cliente");
     }
-    public int clienteRegisterConfirmation(){
+    public int  clienteRegisterConfirmation(){
         return JOptionPane.showConfirmDialog(null, "Cliente No Registrado.\nDesea Registrarlo?");
     }
     
@@ -119,7 +119,17 @@ public class Mensaje {
         return JOptionPane.showConfirmDialog(null, "Deseas crear un nuevo registor de Cliente? ?");
     }
     
- //    =================================================================   
+ //    =================================================================
+    
+    public void productoEmptyId(){
+        JOptionPane.showMessageDialog(null, "Debe ingresar el código del Producto");
+    }
+    public void productoNotFound(){
+        JOptionPane.showMessageDialog(null, "Producto no existente");
+    }
+    public void productcountInZero(){
+        JOptionPane.showMessageDialog(null, "Debe ingresar almenos 1 (una) unidad del producto seleccionado");
+    }
     public void productoCreateSuccessfully() {
         JOptionPane.showMessageDialog(null, "Producto creado  correctamente");
     }
@@ -165,11 +175,10 @@ public class Mensaje {
 
 //    =================================================================
 
-    public void saleCanceledSuccessfully() {
+    public void ventaCanceledSuccessfully() {
         JOptionPane.showMessageDialog(null, "Venta Cancelada Correctamente");
     }
-
-    public void saleCanceleFailed() {
+    public void ventaCancelFailed() {
         JOptionPane.showMessageDialog(null, "No se Pudo Cancelar la Venta, Error de sistema");
     }
 
@@ -177,22 +186,25 @@ public class Mensaje {
         JOptionPane.showMessageDialog(null, "No se Pudo continuar la operacion, error de sistema");
     }
 
-    public void saleSavedSuccessfully() {
+    public void ventaSavedSuccessfully() {
         JOptionPane.showMessageDialog(null, "Venta guardada Correctamente");
     }
-
-    public void saleSaveFailed() {
-        JOptionPane.showMessageDialog(null, "No se pudo guardar la venta. error de sistema");
+    public void ventaSaveFailed() {
+        JOptionPane.showMessageDialog(null, "No se pudo generar la venta. error de sistema");
     }
-
-    public void saleSaveDetailFailed() {
+    public int  ventaConfirmation(){
+        return JOptionPane.showConfirmDialog(null, "Desea Generar la Venta?");
+    }
+    public void detalleVentaSaveFailed() {
         JOptionPane.showMessageDialog(null, "No se pudo guardar el detalle de la venta. error de sistema");
     }
 
     public void getMaxSerialNumberFailed() {
         JOptionPane.showMessageDialog(null, "No se pudo cargar el numero de serie. error de sistema");
     }
-
+    public int  ventaPayConfirmation(){
+        return JOptionPane.showConfirmDialog(null, "Desea realizar el Cobro?");
+    }
 
    
 //    ========================================================
@@ -205,5 +217,14 @@ public class Mensaje {
     public void emptyFields(){
         JOptionPane.showMessageDialog(null, "No se pudo realizar la operacion, verifique que los campos tengan valores validos");
     }
+    public void notEnoughStock(){
+        JOptionPane.showMessageDialog(null, "No hay Stock suficiente para la venta");
+    }
 
+    public void totalCostInZero(){
+        JOptionPane.showMessageDialog(null, "El valor de la venta debe ser mayor a cero");
+    }
+    public void invalidPayValue(){
+        JOptionPane.showMessageDialog(null, "El valor ingresado en \"Otro Valor\" ni es valido");
+    }
 }   

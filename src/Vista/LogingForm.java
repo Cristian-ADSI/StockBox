@@ -34,16 +34,16 @@ public class LogingForm extends javax.swing.JFrame {
 
             //Get User Data from DB
             String[] userData   = getUserData(passwordInput, userInput);
-            String idUser       = userData[0];
+            String idUsuario       = userData[0];
             String DNI          = userData[1];
-            String status       = userData[4];
-            String user         = userData[5];
+            String estado       = userData[4];
+            String usuario         = userData[5];
             String role         = userData[6];
             
 
             //Check User data
-            invalidUser     = checkInvalidUser(DNI, user);
-            invalidStatus   = checkInvalidStatus(status, role);
+            invalidUser     = checkInvalidUser(DNI, usuario);
+            invalidStatus   = checkInvalidStatus(estado, role);
             
             if (invalidUser) {
                 
@@ -51,15 +51,15 @@ public class LogingForm extends javax.swing.JFrame {
                 txtUser.requestFocus();
             } else if (invalidStatus) {
                 
-                message.invalidStatus(this, status, role);
+                message.invalidStatus(this, estado, role);
                 txtUser.requestFocus();
             } else {
                 
-                Application App = new Application();
+                Aplicacion App = new Aplicacion();
                 message.LoginSuccesfully(this, role);
                 
                 App.setVisible(true);
-                App.asignarvendedor(DNI, role, idUser);
+                App.setUserRole(DNI, role, idUsuario);
                 dispose();
             }
         }
@@ -117,7 +117,7 @@ public class LogingForm extends javax.swing.JFrame {
         
         boolean invalidStatus = false;
 
-        //this Condional is created to handle cases when status and role are null
+        //this Condional is created to handle cases when estado and role are null
         //cause equals() doesn't acept null values 
         if (status == null) {
             status = "Usuario no existente";

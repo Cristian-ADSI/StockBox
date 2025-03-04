@@ -1,7 +1,7 @@
 package Controlador;
 
 import Modelos.EntidadDetalleVenta;
-import Modelos.EntidadVentas;
+import Modelos.EntidadVenta;
 import Vista.Mensaje;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +24,7 @@ public class VentasDAO {
 
     public static ArrayList readSales() {
 
-        ArrayList<EntidadVentas> salesList = new ArrayList<>();
+        ArrayList<EntidadVenta> salesList = new ArrayList<>();
 
         String SQLQuery = "select * from `view_ventas`";
 
@@ -33,10 +33,10 @@ public class VentasDAO {
             resSet = prepStatement.executeQuery();
 
             while (resSet.next()) {
-                EntidadVentas entVentas = new EntidadVentas();
+                EntidadVenta entVentas = new EntidadVenta();
 
-                entVentas.setCliente(resSet.getString(1));
-                entVentas.setVendedor(resSet.getString(2));
+                entVentas.setIdCliente(resSet.getString(1));
+                entVentas.setIdUsuario(resSet.getString(2));
                 entVentas.setIdVenta(resSet.getInt(3));
                 entVentas.setFecha(resSet.getString(4));
                 entVentas.setMonto(resSet.getFloat(5));

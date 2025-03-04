@@ -1,104 +1,47 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Vista;
 
 import Controlador.GenerarVentaDAO;
-import Modelos.EntidadDetalleVenta;
-import Modelos.EntidadUsuario;
-import Modelos.EntidadGenerarVenta;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Mr. Robot
- */
 public class CobroForm extends javax.swing.JFrame {
 
-    EntidadGenerarVenta evt = new EntidadGenerarVenta();
-    EntidadDetalleVenta edv = new EntidadDetalleVenta();
-    GenerarVentaDAO venDAO = new GenerarVentaDAO();
+    GenerarVentaDAO genVentaDAO = new GenerarVentaDAO();
+    Mensaje mensaje = new Mensaje();
 
-    int X;
-    int Y;
-    float pago = 0;
-    float totalPag = 0;
-    String listapago = "";
+    int XWndowPosition;
+    int YWindowPosition;
+    float pay = 0;
+    float totalToPay = 0;
+    String listaDePagos = "";
 
     //====================================
-    int idCliente;
-    int idVendedor;
-    String nroSerie="";
-    String fecha;
-    float monto;
-    String estado;
+    String nroSerie = "";
+
     //=====================================
-    int idVenta;
-    int idVenta2;
-    int idProducto;
-    int cantidad;
-    float precio;
-    String estadoD;
-
-    Application pf = new Application();
-
     public CobroForm() {
         initComponents();
         this.setLocationRelativeTo(null);
     }
 
-    public void CapVenta(int idClient, int idVend, String NRS, String fec, float mon, String est) {
-        nroSerie = NRS;
-        txtNroSerie.setText(NRS);
-        
-        evt.setIdCliente(idClient);
-        evt.setIdVendedor(idVend);
-        evt.setNroSerie(NRS);
-        evt.setFecha(fec);
-        evt.setMonto(mon);
-        evt.setEstado(est);    
-        venDAO.saveSale(evt);
-    }
+    public void SetTotal(float total, String serie) {
+        totalToPay = total;
+        txtTotalToPay.setText("$" + totalToPay);
 
-    public void GuardarVenta() {
-        evt.setIdCliente(idCliente);
-        evt.setIdVendedor(idVendedor);
-        evt.setNroSerie(nroSerie);
-        evt.setFecha(fecha);
-        evt.setMonto(monto);
-        evt.setEstado(estado);
-        venDAO.saveSale(evt);
-    }
-
-    public void Cap_Guad_DetVenta(int idVent, String NRS, int idProduct, int cant, float preci, String est) {
-        idVenta = idVent;
-        idVenta2 = idVent;
-        nroSerie = NRS;
-        idProducto = idProduct;
-        cantidad = cant;
-        precio = preci;
-        estadoD = est;
-
-        edv.setIdVenta(idVenta);
-        edv.setNroSerie(nroSerie);
-        edv.setIdProducto(idProducto);
-        edv.setCantidad(cantidad);
-        edv.setPrecioVenta(precio);
-        edv.setEstado(estadoD);
-        
-        venDAO.saveSaleDetail(edv);
-    }
-
-    public void CapTotal(float total, String serie) {
-        totalPag = total;
-        txtTotalPagar.setText("$" + totalPag);
-        
         nroSerie = serie;
         txtNroSerie.setText(nroSerie);
+    }
+
+    private boolean validateOtroValor() {
+
+        try {
+            Integer.parseInt(txtOtroValor.getText());
+            Float.parseFloat(txtOtroValor.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -118,7 +61,7 @@ public class CobroForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtOtroValor = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        txtTotalPagar = new javax.swing.JTextField();
+        txtTotalToPay = new javax.swing.JTextField();
         txtCambio = new javax.swing.JTextField();
         btnCalcular = new javax.swing.JButton();
         btnCobrar = new javax.swing.JButton();
@@ -160,7 +103,7 @@ public class CobroForm extends javax.swing.JFrame {
             .addGroup(topPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -264,9 +207,9 @@ public class CobroForm extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel4.setText("Cambio");
 
-        txtTotalPagar.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
-        txtTotalPagar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        txtTotalPagar.setEnabled(false);
+        txtTotalToPay.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        txtTotalToPay.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtTotalToPay.setEnabled(false);
 
         txtCambio.setEditable(false);
         txtCambio.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
@@ -347,7 +290,7 @@ public class CobroForm extends javax.swing.JFrame {
                     .addComponent(btnDiezmil, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnCincuentamil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtOtroValor)
-                    .addComponent(txtTotalPagar)
+                    .addComponent(txtTotalToPay)
                     .addComponent(btnDosmil, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnCancelarCobro, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCobrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -378,7 +321,7 @@ public class CobroForm extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(txtTotalPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                        .addComponent(txtTotalToPay, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel4)
@@ -430,7 +373,7 @@ public class CobroForm extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(topPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(topPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -448,12 +391,12 @@ public class CobroForm extends javax.swing.JFrame {
 
     private void topPanelMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_topPanelMouseDragged
         Point point = MouseInfo.getPointerInfo().getLocation();
-        setLocation(point.x - X, point.y - Y);
+        setLocation(point.x - XWndowPosition, point.y - YWindowPosition);
     }//GEN-LAST:event_topPanelMouseDragged
 
     private void topPanelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_topPanelMousePressed
-        X = evt.getX();
-        Y = evt.getY();
+        XWndowPosition = evt.getX();
+        YWindowPosition = evt.getY();
     }//GEN-LAST:event_topPanelMousePressed
 
     private void txtCambioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCambioActionPerformed
@@ -461,83 +404,103 @@ public class CobroForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCambioActionPerformed
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
-        pago = pago + Float.parseFloat(txtOtroValor.getText());
-        txtCambio.setText("$" + (pago - totalPag));
-        listapago = listapago + "\n$" + txtOtroValor.getText();
-        txaTotales.setText(listapago);
+
+        if (!txtOtroValor.getText().equals("") && validateOtroValor()) {
+            pay = pay + Float.parseFloat(txtOtroValor.getText());
+            txtCambio.setText("$" + (pay - totalToPay));
+            listaDePagos = listaDePagos + "\n$" + txtOtroValor.getText();
+            txaTotales.setText(listaDePagos);
+        } else {
+            mensaje.invalidPayValue();
+        }
+
     }//GEN-LAST:event_btnCalcularActionPerformed
 
     private void btnCobrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCobrarActionPerformed
-        int resp = JOptionPane.showConfirmDialog(this, "Desea Realizar el Cobro??");
-        if (resp == 0) {
-            JOptionPane.showMessageDialog(this, "Venta Generada Exitosamente");
-            dispose();      
+        int response = mensaje.ventaPayConfirmation();
+        if (response == 0) {
+            mensaje.ventaSavedSuccessfully();
+            dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Operacion Cancelada");
+            mensaje.operationCanceled();
         }
     }//GEN-LAST:event_btnCobrarActionPerformed
 
     private void btnLimpiarCobroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarCobroActionPerformed
-        pago = 0;
+        pay = 0;
         txtOtroValor.setText("");
         txtCambio.setText("");
-        listapago="";
+        listaDePagos = "";
+        txaTotales.setText("");
     }//GEN-LAST:event_btnLimpiarCobroActionPerformed
 
     private void btnCancelarCobroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarCobroActionPerformed
-        int resp = JOptionPane.showConfirmDialog(this, "Desea Cancelar la Venta?");
-        if (resp == 0) {
-            
-            venDAO.cancelSale(txtNroSerie.getText());
-            venDAO.cancelSaleDetail(txtNroSerie.getText());
-            JOptionPane.showMessageDialog(this, "Venta Cancelada Exitosamente");
-            
+        int response = JOptionPane.showConfirmDialog(this, "Desea Cancelar la Venta?");
+
+        int cancelVenta = 0;
+        int cancelDetalleVenta = 0;
+
+        if (response == 0) {
+            cancelVenta = genVentaDAO.cancelSale(Integer.parseInt(txtNroSerie.getText()));
+            cancelDetalleVenta = genVentaDAO.cancelSaleDetail(txtNroSerie.getText());
+        } else {
+            mensaje.operationCanceled();
+        };
+
+        if (cancelVenta == 1 && cancelDetalleVenta == 1 && response == 0) {
+            mensaje.ventaCanceledSuccessfully();
             dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Operacion Cancelada");
+
         }
+
+        if (response == 0 && cancelVenta == 0 && cancelDetalleVenta == 0) {
+            mensaje.ventaCancelFailed();
+        }
+
+
     }//GEN-LAST:event_btnCancelarCobroActionPerformed
 
     private void btnMilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMilActionPerformed
-        pago = pago + 1000f;
-        txtCambio.setText("$" + (pago - totalPag));
-        listapago = listapago + "\n$1000";
-        txaTotales.setText(listapago);
+        pay = pay + 1000f;
+        txtCambio.setText("$" + (pay - totalToPay));
+        listaDePagos = listaDePagos + "\n$1000";
+        txaTotales.setText(listaDePagos);
     }//GEN-LAST:event_btnMilActionPerformed
 
     private void btnDosmilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDosmilActionPerformed
-        pago = pago + 2000f;
-        txtCambio.setText("$" + (pago - totalPag));
-        listapago = listapago + "\n$2000";
-        txaTotales.setText(listapago);
+        pay = pay + 2000f;
+        txtCambio.setText("$" + (pay - totalToPay));
+        listaDePagos = listaDePagos + "\n$2000";
+        txaTotales.setText(listaDePagos);
     }//GEN-LAST:event_btnDosmilActionPerformed
 
     private void btnCincomilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCincomilActionPerformed
-        pago = pago + 5000f;
-        txtCambio.setText("$" + (pago - totalPag));
-        listapago = listapago + "\n$5000";
-        txaTotales.setText(listapago);
+        pay = pay + 5000f;
+        txtCambio.setText("$" + (pay - totalToPay));
+        listaDePagos = listaDePagos + "\n$5000";
+        txaTotales.setText(listaDePagos);
     }//GEN-LAST:event_btnCincomilActionPerformed
 
     private void btnDiezmilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiezmilActionPerformed
-        pago = pago + 10000f;
-        txtCambio.setText("$" + (pago - totalPag));
-        listapago = listapago + "\n$10000";
-        txaTotales.setText(listapago);
+        pay = pay + 10000f;
+        txtCambio.setText("$" + (pay - totalToPay));
+        listaDePagos = listaDePagos + "\n$10000";
+        txaTotales.setText(listaDePagos);
     }//GEN-LAST:event_btnDiezmilActionPerformed
 
     private void btnVeintemilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVeintemilActionPerformed
-        pago = pago + 20000f;
-        txtCambio.setText("$" + (pago - totalPag));
-        listapago = listapago + "\n$20000";
-        txaTotales.setText(listapago);
+        pay = pay + 20000f;
+        txtCambio.setText("$" + (pay - totalToPay));
+        listaDePagos = listaDePagos + "\n$20000";
+        txaTotales.setText(listaDePagos);
     }//GEN-LAST:event_btnVeintemilActionPerformed
 
     private void btnCincuentamilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCincuentamilActionPerformed
-        pago = pago + 50000f;
-        txtCambio.setText("$" + (pago - totalPag));
-        listapago = listapago + "\n$50000";
-        txaTotales.setText(listapago);
+        pay = pay + 50000f;
+        txtCambio.setText("$" + (pay - totalToPay));
+        listaDePagos = listaDePagos + "\n$50000";
+        txaTotales.setText(listaDePagos);
     }//GEN-LAST:event_btnCincuentamilActionPerformed
 
     /**
@@ -598,6 +561,6 @@ public class CobroForm extends javax.swing.JFrame {
     private javax.swing.JTextField txtCambio;
     private javax.swing.JTextField txtNroSerie;
     private javax.swing.JTextField txtOtroValor;
-    private javax.swing.JTextField txtTotalPagar;
+    private javax.swing.JTextField txtTotalToPay;
     // End of variables declaration//GEN-END:variables
 }

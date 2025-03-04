@@ -24,26 +24,7 @@ public class ProductoDAO implements CRUD {
     PreparedStatement prepStatement;
     ResultSet resSet;
 
-    public void StockUpdate(int stock, int idProduct) {
-
-        String SQLQuery = "UPDATE productos SET Stock=? where IdProducto =?";
-
-        try {
-            prepStatement = connection.prepareStatement(SQLQuery);
-            prepStatement.setInt(1, stock);
-            prepStatement.setInt(2, idProduct);
-
-            prepStatement.executeUpdate();
-
-        } catch (SQLException error) {
-
-            String text = "Error en el metodo ProductoDAO.StockUpdate";
-            message.errorInSQLQuery(text, error);
-            message.stockUpdateFailed();
-        }
-    }
-
-    public EntidadProducto getProductoData(int idProducto) {
+    public EntidadProducto getProductoData(String idProducto) {
 
         EntidadProducto entProduct = new EntidadProducto();
         String SQLQuery = "SELECT * FROM productos WHERE IdProducto=?";
@@ -51,7 +32,7 @@ public class ProductoDAO implements CRUD {
         try {
 
             prepStatement = connection.prepareStatement(SQLQuery);
-            prepStatement.setInt(1, idProducto);
+            prepStatement.setString(1, idProducto);
 
             resSet = prepStatement.executeQuery();
 
@@ -71,6 +52,25 @@ public class ProductoDAO implements CRUD {
         }
 
         return entProduct;
+    }
+
+    public void StockUpdate(int stock, int idProduct) {
+
+        String SQLQuery = "UPDATE productos SET Stock=? where IdProducto =?";
+
+        try {
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setInt(1, stock);
+            prepStatement.setInt(2, idProduct);
+
+            prepStatement.executeUpdate();
+
+        } catch (SQLException error) {
+
+            String text = "Error en el metodo ProductoDAO.StockUpdate";
+            message.errorInSQLQuery(text, error);
+            message.stockUpdateFailed();
+        }
     }
 
     public DefaultTableModel listProductosOnTable(JTable tableProducto) {
@@ -216,8 +216,7 @@ public class ProductoDAO implements CRUD {
         return result;
     }
 
-    
-        public void deleteProducto(int selectedRow, int tableRowIdProducto) {
+    public void deleteProducto(int selectedRow, int tableRowIdProducto) {
 
         int queryResult = 0;
         int confirmation = 1;
@@ -239,7 +238,7 @@ public class ProductoDAO implements CRUD {
         }
 
     }
-        
+
     @Override
     public int delete(int idProducto) {
 

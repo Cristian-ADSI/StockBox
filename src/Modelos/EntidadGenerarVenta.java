@@ -1,27 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Modelos;
 
 public class EntidadGenerarVenta {
 
-    int IdVenta;
-    int IdCliente;
-    int IdVendedor;
-    String NroSerie;
-    String Fecha;
-    float Monto;
-    String Estado;
+    int     IdVenta;
+    int     IdCliente;
+    int     IdUsuario;
+    String  NroSerie;
+    String  Fecha;
+    float   Monto;
+    String  Estado;
 
     public EntidadGenerarVenta() {
     }
 
-    public EntidadGenerarVenta(int IdVenta, int IdCliente, int IdVendedor, String NroSerie, String Fecha, float Monto, String Estado) {
+    public EntidadGenerarVenta(int IdVenta, int IdCliente, int IdUsuario, String NroSerie, String Fecha, float Monto, String Estado) {
         this.IdVenta    = IdVenta;
         this.IdCliente  = IdCliente;
-        this.IdVendedor = IdVendedor;
+        this.IdUsuario = IdUsuario;
         this.NroSerie   = NroSerie;
         this.Fecha      = Fecha;
         this.Monto      = Monto;
@@ -44,12 +40,12 @@ public class EntidadGenerarVenta {
         this.IdCliente = Id_Cliente;
     }
 
-    public int getIdVendedor() {
-        return IdVendedor;
+    public int getIdUsuario() {
+        return IdUsuario;
     }
 
-    public void setIdVendedor(int Id_Vendedor) {
-        this.IdVendedor = Id_Vendedor;
+    public void setIdUsuario(int Id_Vendedor) {
+        this.IdUsuario = Id_Vendedor;
     }
 
     public String getNroSerie() {

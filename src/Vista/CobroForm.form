@@ -139,7 +139,7 @@
                       <Component id="btnDiezmil" alignment="0" max="32767" attributes="0"/>
                       <Component id="btnCincuentamil" alignment="1" max="32767" attributes="0"/>
                       <Component id="txtOtroValor" alignment="1" max="32767" attributes="0"/>
-                      <Component id="txtTotalPagar" alignment="1" max="32767" attributes="0"/>
+                      <Component id="txtTotalToPay" alignment="1" max="32767" attributes="0"/>
                       <Component id="btnDosmil" alignment="0" max="32767" attributes="0"/>
                       <Component id="btnCancelarCobro" min="-2" pref="134" max="-2" attributes="0"/>
                       <Component id="btnCobrar" alignment="1" max="32767" attributes="0"/>
@@ -177,7 +177,7 @@
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <Group type="102" attributes="0">
                           <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                          <Component id="txtTotalPagar" pref="0" max="32767" attributes="0"/>
+                          <Component id="txtTotalToPay" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -405,7 +405,7 @@
             <Property name="text" type="java.lang.String" value="Cambio"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtTotalPagar">
+        <Component class="javax.swing.JTextField" name="txtTotalToPay">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Century Gothic" size="18" style="0"/>
