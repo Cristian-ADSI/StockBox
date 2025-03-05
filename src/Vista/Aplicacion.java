@@ -89,7 +89,6 @@ public class Aplicacion extends javax.swing.JFrame {
         getMaxSerialNumber();
         getCurrentDate();
 
-        txtDNIClienteGenVenta.setText("456214578");
     }
 
     //=========METODOS PANEL DE COLABORADORES===================/
@@ -458,7 +457,8 @@ public class Aplicacion extends javax.swing.JFrame {
         txtIdUsuario.setText(idUsuario);
         txtRoleUsuario.setText(role);
 
-        if (role.equals("Vendedor")) {
+        if (role.equals("Vendedor")) {        
+            tblUsuarios.setVisible(false);
             btnCreateUsuario.setVisible(false);
             btnCreateCliente.setVisible(false);
             btnCreateProducto.setVisible(false);
