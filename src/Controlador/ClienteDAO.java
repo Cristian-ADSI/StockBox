@@ -104,14 +104,51 @@ public class ClienteDAO implements CRUD {
         return customersList;
     }
 
-    public void createCliente(Map formData) {
-        int resp = this.message.clientesCreateConfirmation();
+    private int duplicatedDNI(Map formData) {
+        String SQLQuery = "select * from `clientes`where DNI = ?";
+        List<EntidadCliente> customer = new ArrayList<>();
 
-        if (resp == 0) {
-            this.create(formData);
-        } else {
-            this.message.operationCanceled();
+        try {
+            prepStatement = connection.prepareStatement(SQLQuery);
+            prepStatement.setObject(1, formData.get("DNI"));
+            resSet = prepStatement.executeQuery();
+
+            while (resSet.next()) {
+                EntidadCliente entCliente = new EntidadCliente();
+
+                entCliente.setIdCliente(resSet.getInt(1));
+                entCliente.setDNI(resSet.getString(2));
+                entCliente.setNombre(resSet.getString(3));
+                entCliente.setDireccion(resSet.getString(4));
+                entCliente.setEstado(resSet.getString(5));
+
+                customer.add(entCliente);
+            }
+
+        } catch (Exception error) {
+
+            String text = "Error en el metodo ClienteDAO.duplicatedDNI: ";
+            message.errorInFunction(text, error);
+            message.ClienteCreateFailed();
+
         }
+
+        return customer.size();
+    }
+
+    public int createCliente(Map formData) {
+        int resp = this.message.clientesCreateConfirmation();
+        int duplicatedDNI = this.duplicatedDNI(formData);
+
+        if (resp == 1) {
+            this.message.operationCanceled();
+        } else if (duplicatedDNI == 1) {
+            this.message.clienteDNIDuplicated();
+        } else if (resp == 0 && duplicatedDNI == 0) {
+            this.create(formData);
+        }
+
+        return resp;
     }
 
     @Override

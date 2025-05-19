@@ -106,7 +106,7 @@ public class UsuarioDAO implements CRUD {
         return usersList;
     }
 
-    public void createUsuario(Map formData) {
+    public int createUsuario(Map formData) {
 
         boolean queryResult = false;
 
@@ -122,6 +122,8 @@ public class UsuarioDAO implements CRUD {
         if (queryResult) {
             message.usuarioCreatedSuccessfully();
         }
+        
+        return confirmation;
     }
 
     @Override

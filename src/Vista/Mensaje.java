@@ -33,6 +33,11 @@ public class Mensaje {
         System.err.println(text);
         System.err.println(error);
     }
+    
+   public void errorInFunction(String text, Exception error) {
+        System.err.println(text);
+        System.err.println(error);
+    }
 //==========================================
     public void usuarioUpdatedSuccessfully() {
 
@@ -81,6 +86,10 @@ public class Mensaje {
     }
     public void clienteDNIEmpty(){
         JOptionPane.showMessageDialog(null, "Debe Ingresar el DNI del Cliente");
+    }
+    
+     public void clienteDNIDuplicated(){
+        JOptionPane.showMessageDialog(null, "El DNI ingresado ya se encuentra Registrado");
     }
     public int  clienteRegisterConfirmation(){
         return JOptionPane.showConfirmDialog(null, "Cliente No Registrado.\nDesea Registrarlo?");
@@ -205,6 +214,10 @@ public class Mensaje {
     public int  ventaPayConfirmation(){
         return JOptionPane.showConfirmDialog(null, "Desea realizar el Cobro?");
     }
+    
+     public int  invalidValuesForSale(){
+        return JOptionPane.showConfirmDialog(null, "La venta no esta asignada a un Cliente o tiene un total de cero, por favor verifquee intentelo nuevamente");
+    }
 
    
 //    ========================================================
@@ -221,10 +234,14 @@ public class Mensaje {
         JOptionPane.showMessageDialog(null, "No hay Stock suficiente para la venta");
     }
 
-    public void totalCostInZero(){
+    public void totalAmountIsZero(){
         JOptionPane.showMessageDialog(null, "El valor de la venta debe ser mayor a cero");
     }
     public void invalidPayValue(){
         JOptionPane.showMessageDialog(null, "El valor ingresado en \"Otro Valor\" ni es valido");
+    }
+    
+    public void insuficentPayAmount(){
+        JOptionPane.showMessageDialog(null, "El valor  pagado no es suficiente");
     }
 }   

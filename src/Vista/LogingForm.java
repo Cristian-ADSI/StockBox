@@ -72,8 +72,6 @@ public class LogingForm extends javax.swing.JFrame {
         btnMinimize.setBackground(new java.awt.Color(0, 0, 0, 0));
         txtUser.setBackground(new java.awt.Color(0, 0, 0, 4));
         txtPassword.setBackground(new java.awt.Color(0, 0, 0, 1));
-        txtUser.setText("luis.rodriguez");
-        txtPassword.setText("34567890C");
         this.setLocationRelativeTo(null);
     }
     

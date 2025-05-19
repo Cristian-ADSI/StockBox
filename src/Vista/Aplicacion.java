@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -62,6 +63,8 @@ public class Aplicacion extends javax.swing.JFrame {
 
     private int stockProducto;
     private float totalVenta;
+
+    ArrayList<EntidadProducto> listProductos = new ArrayList();
 
     //==========ID's -  Filas de las tablas=====//
     private int tableRowIdUsuario;
@@ -124,7 +127,11 @@ public class Aplicacion extends javax.swing.JFrame {
         formData.put("estado", cbxEstadoUsuario.getSelectedItem().toString());
         formData.put("usuario", txtusuarioUsuario.getText());
 
-        usuarioDAO.createUsuario(formData);
+        int result = usuarioDAO.createUsuario(formData);
+
+        if (result == 0) {
+            cleanFormUsuarios();
+        }
     }
 
     private void updateUsuario() {
@@ -180,7 +187,11 @@ public class Aplicacion extends javax.swing.JFrame {
         formData.put("direccion", txtDireccionCliente.getText());
         formData.put("estado", cbxEstadoCliente.getSelectedItem().toString());
 
-        clientesDAO.createCliente(formData);
+        int result = clientesDAO.createCliente(formData);
+
+        if (result == 0) {
+            cleanFormClientes();
+        }
     }
 
     private void updateClente() {
@@ -234,7 +245,11 @@ public class Aplicacion extends javax.swing.JFrame {
         formData.put("stock", txtStockProducto.getText());
         formData.put("estado", cbxEstadoProducto.getSelectedItem().toString());
 
-        productoDAO.createProducto(formData);
+        int result = productoDAO.createProducto(formData);
+
+        if (result == 0) {
+            cleanFormProductos();
+        }
     }
 
     private void updateProducto() {
@@ -289,14 +304,13 @@ public class Aplicacion extends javax.swing.JFrame {
 
         String DNI = txtDNIClienteGenVenta.getText();
 
-        if (DNI.equals("")) {
+        if (DNI.isBlank()) {
             mensaje.clienteDNIEmpty();
         } else {
             entdClientes = clientesDAO.getClienteData(DNI);
         }
 
         this.validateClienteData(DNI);
-
         this.cleanTableClientes();
         this.listClientes();
     }
@@ -358,11 +372,11 @@ public class Aplicacion extends javax.swing.JFrame {
 
         if (cantidadProducto == 0) {
             mensaje.productcountInZero();
-        }
-
-        if (stockProducto >= cantidadProducto && cantidadProducto > 0) {
-
+        } else if (cantidadProducto > stockProducto) {
+            mensaje.notEnoughStock();
+        } else if (stockProducto >= cantidadProducto) {
             Object[] producto = new Object[6];
+            
             producto[0] = indexProducto;
             producto[1] = idProducto;
             producto[2] = nombreProducto;
@@ -375,9 +389,6 @@ public class Aplicacion extends javax.swing.JFrame {
             tblDetalleVentas.setModel(tableModelDetalleVenta);
 
             calculateTotal();
-        } else if (stockProducto < cantidadProducto) {
-
-            mensaje.notEnoughStock();
         }
     }
 
@@ -457,7 +468,7 @@ public class Aplicacion extends javax.swing.JFrame {
         txtIdUsuario.setText(idUsuario);
         txtRoleUsuario.setText(role);
 
-        if (role.equals("Vendedor")) {        
+        if (role.equals("Vendedor")) {
             tblUsuarios.setVisible(false);
             btnCreateUsuario.setVisible(false);
             btnCreateCliente.setVisible(false);
@@ -473,19 +484,8 @@ public class Aplicacion extends javax.swing.JFrame {
 
             btnNewUsuario.setVisible(false);
             btnNewCliente.setVisible(false);
-            btnNewProducto.setVisible(false);
+            btncleanProductFormAndTable.setVisible(false);
         }
-    }
-
-    void updateStock() {
-//        for (int i = 0; i < tableModelDetalleVenta.getRowCount(); i++) {
-//            idProducto = Integer.parseInt(tblDetalleVentas.getValueAt(i, 1).toString());
-//            cantidadProducto = Integer.parseInt(tblDetalleVentas.getValueAt(i, 3).toString());
-//            EntidadProducto ep = new EntidadProducto();
-//            ep = productoDAO.getProductoData(idProducto);
-//            int stock = ep.getStock() - cantidadProducto;
-//            productoDAO.StockUpdate(stock, idProducto);
-//        }
     }
 
     void cleanGenerarVentasForm() {
@@ -504,6 +504,44 @@ public class Aplicacion extends javax.swing.JFrame {
         txtNroSerie.setText("");
         getMaxSerialNumber();
         txtDNIClienteGenVenta.requestFocus();
+    }
+
+    private void cleanTableVentas() {
+        for (int i = 0; i < tableModelVentas.getRowCount(); i++) {
+            tableModelVentas.removeRow(i);
+            i = i - 1;
+        }
+    }
+
+    private void generateVenta() {
+
+        String nroSerie = txtNroSerie.getText();
+        int saveVentaResult = 0;
+        int saveDetalleVentaResult = 0;
+
+        int ventaConfirmation = mensaje.ventaConfirmation();
+
+        if (ventaConfirmation == 0) {
+            saveVentaResult = this.saveVenta();
+            saveDetalleVentaResult = this.saveDetalleVenta();
+        } else {
+            mensaje.operationCanceled();
+        }
+
+        if (saveVentaResult == 1 && saveDetalleVentaResult == 1) {
+            CobroForm cobroFrom = new CobroForm();
+            cleanTableProductos();
+            listProductos();
+            cleanGenerarVentasForm();
+
+            cobroFrom.SetTotal(this.totalVenta, nroSerie, listProductos);
+            cobroFrom.setVisible(true);
+        }
+
+        if ((saveVentaResult == 0 || saveDetalleVentaResult == 0) && ventaConfirmation == 0) {
+            mensaje.ventaSaveFailed();
+        }
+
     }
 
     //=================================================================/
@@ -531,7 +569,11 @@ public class Aplicacion extends javax.swing.JFrame {
         ArrayList<EntidadDetalleVenta> listSaleDetails = VentasDAO.searchSaleDetails(SaleId);
 
         for (int i = 0; i < listSaleDetails.size(); i++) {
-            productsDetail = productsDetail + listSaleDetails.get(i).getNombreProducto() + " - $" + listSaleDetails.get(i).getPrecioVenta() + "\n";
+            productsDetail = productsDetail 
+                    +"#" +      listSaleDetails.get(i).getIdProducto()+ "   "
+                    +"X" +      listSaleDetails.get(i).getCantidad()+ "   "
+                    +           listSaleDetails.get(i).getNombreProducto() 
+                    + " - $" +  listSaleDetails.get(i).getPrecioVenta()+ "\n";
         }
 
         this.txtaProductList_ventas.setText(productsDetail);
@@ -615,7 +657,6 @@ public class Aplicacion extends javax.swing.JFrame {
         btnUpdateCliente = new javax.swing.JButton();
         btnDeleteCliente = new javax.swing.JButton();
         btnNewCliente = new javax.swing.JButton();
-        btnReloadTblCliente = new javax.swing.JButton();
         bgClientes = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblClientes = new javax.swing.JTable();
@@ -628,7 +669,7 @@ public class Aplicacion extends javax.swing.JFrame {
         txtStockProducto = new javax.swing.JTextField();
         lblEstadoP = new javax.swing.JLabel();
         cbxEstadoProducto = new javax.swing.JComboBox<>();
-        btnNewProducto = new javax.swing.JButton();
+        btncleanProductFormAndTable = new javax.swing.JButton();
         btnDeleteProducto = new javax.swing.JButton();
         btnUpdateProducto = new javax.swing.JButton();
         btnCreateProducto = new javax.swing.JButton();
@@ -637,6 +678,7 @@ public class Aplicacion extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         tblProductos = new javax.swing.JTable();
         PanelVentas = new javax.swing.JPanel();
+        btnRefreshSales = new javax.swing.JButton();
         txtClientName_ventas = new javax.swing.JTextField();
         lblClientName_Ventas = new javax.swing.JLabel();
         txtUserName_ventas = new javax.swing.JTextField();
@@ -1028,7 +1070,7 @@ public class Aplicacion extends javax.swing.JFrame {
         btnNewUsuario.setBackground(new java.awt.Color(102, 102, 102));
         btnNewUsuario.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         btnNewUsuario.setForeground(new java.awt.Color(255, 255, 255));
-        btnNewUsuario.setText("Nuevo");
+        btnNewUsuario.setText("Limpiar y Refrescar");
         btnNewUsuario.setBorder(null);
         btnNewUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnNewUsuario.addActionListener(new java.awt.event.ActionListener() {
@@ -1036,7 +1078,7 @@ public class Aplicacion extends javax.swing.JFrame {
                 btnNewUsuarioActionPerformed(evt);
             }
         });
-        paneColaboradores.add(btnNewUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 70, 90, 30));
+        paneColaboradores.add(btnNewUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 70, 220, 30));
 
         cbxEstadoUsuario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Activo", "Inactivo" }));
         paneColaboradores.add(cbxEstadoUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 160, 160, 30));
@@ -1150,7 +1192,7 @@ public class Aplicacion extends javax.swing.JFrame {
         btnNewCliente.setBackground(new java.awt.Color(102, 102, 102));
         btnNewCliente.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         btnNewCliente.setForeground(new java.awt.Color(255, 255, 255));
-        btnNewCliente.setText("Nuevo");
+        btnNewCliente.setText("Limpiar y Refrescar");
         btnNewCliente.setBorder(null);
         btnNewCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnNewCliente.addActionListener(new java.awt.event.ActionListener() {
@@ -1158,20 +1200,7 @@ public class Aplicacion extends javax.swing.JFrame {
                 btnNewClienteActionPerformed(evt);
             }
         });
-        PanleClietntes.add(btnNewCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 60, 90, 30));
-
-        btnReloadTblCliente.setBackground(new java.awt.Color(255, 102, 51));
-        btnReloadTblCliente.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-        btnReloadTblCliente.setForeground(new java.awt.Color(255, 255, 255));
-        btnReloadTblCliente.setText("Refrescar");
-        btnReloadTblCliente.setBorder(null);
-        btnReloadTblCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnReloadTblCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReloadTblClienteActionPerformed(evt);
-            }
-        });
-        PanleClietntes.add(btnReloadTblCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 110, 90, 30));
+        PanleClietntes.add(btnNewCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 70, 220, 30));
 
         bgClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Clientesbg.png"))); // NOI18N
         PanleClietntes.add(bgClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -1232,18 +1261,18 @@ public class Aplicacion extends javax.swing.JFrame {
         cbxEstadoProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Existente", "Agotado" }));
         PanelProductos.add(cbxEstadoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 160, 160, 30));
 
-        btnNewProducto.setBackground(new java.awt.Color(102, 102, 102));
-        btnNewProducto.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-        btnNewProducto.setForeground(new java.awt.Color(255, 255, 255));
-        btnNewProducto.setText("Nuevo");
-        btnNewProducto.setBorder(null);
-        btnNewProducto.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnNewProducto.addActionListener(new java.awt.event.ActionListener() {
+        btncleanProductFormAndTable.setBackground(new java.awt.Color(102, 102, 102));
+        btncleanProductFormAndTable.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        btncleanProductFormAndTable.setForeground(new java.awt.Color(255, 255, 255));
+        btncleanProductFormAndTable.setText("Limpiar y Refrescar");
+        btncleanProductFormAndTable.setBorder(null);
+        btncleanProductFormAndTable.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btncleanProductFormAndTable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNewProductoActionPerformed(evt);
+                btncleanProductFormAndTableActionPerformed(evt);
             }
         });
-        PanelProductos.add(btnNewProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 70, 90, 30));
+        PanelProductos.add(btncleanProductFormAndTable, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 70, 220, 30));
 
         btnDeleteProducto.setBackground(new java.awt.Color(255, 51, 51));
         btnDeleteProducto.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
@@ -1312,6 +1341,19 @@ public class Aplicacion extends javax.swing.JFrame {
         PanelPrincipal.addTab("     Stock de Productos    ", PanelProductos);
 
         PanelVentas.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        btnRefreshSales.setBackground(new java.awt.Color(102, 102, 102));
+        btnRefreshSales.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        btnRefreshSales.setForeground(new java.awt.Color(255, 255, 255));
+        btnRefreshSales.setText("Referscar");
+        btnRefreshSales.setBorder(null);
+        btnRefreshSales.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnRefreshSales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshSalesActionPerformed(evt);
+            }
+        });
+        PanelVentas.add(btnRefreshSales, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 70, 160, 30));
 
         txtClientName_ventas.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         txtClientName_ventas.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -1446,7 +1488,6 @@ public class Aplicacion extends javax.swing.JFrame {
         createProducto();
         cleanTableProductos();
         listProductos();
-        cleanFormProductos();
     }//GEN-LAST:event_btnCreateProductoActionPerformed
 
     private void btnUpdateProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateProductoActionPerformed
@@ -1463,11 +1504,11 @@ public class Aplicacion extends javax.swing.JFrame {
         cleanFormProductos();
     }//GEN-LAST:event_btnDeleteProductoActionPerformed
 
-    private void btnNewProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewProductoActionPerformed
+    private void btncleanProductFormAndTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncleanProductFormAndTableActionPerformed
         cleanFormProductos();
         cleanTableProductos();
         listProductos();
-    }//GEN-LAST:event_btnNewProductoActionPerformed
+    }//GEN-LAST:event_btncleanProductFormAndTableActionPerformed
 
     private void tblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseClicked
         int fila = tblClientes.getSelectedRow();
@@ -1510,7 +1551,7 @@ public class Aplicacion extends javax.swing.JFrame {
         this.createCliente();
         this.cleanTableClientes();
         this.listClientes();
-        this.cleanFormClientes();
+        //this.cleanFormClientes();
     }//GEN-LAST:event_btnCreateClienteActionPerformed
 
     private void tblUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUsuariosMouseClicked
@@ -1551,7 +1592,7 @@ public class Aplicacion extends javax.swing.JFrame {
         createUsuario();
         cleanTableUsuarios();
         listUsuarios();
-        cleanFormUsuarios();
+        //cleanFormUsuarios();
     }//GEN-LAST:event_btnCreateUsuarioActionPerformed
 
     private void btnBuscarclientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarclientActionPerformed
@@ -1566,47 +1607,29 @@ public class Aplicacion extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         addProducto();
+
+        EntidadProducto nuevoProd = new EntidadProducto();
+
+        int currentStock = entdProducto.getStock();
+        int unitsForSale = Integer.parseInt(spnCantidadProducto.getValue().toString());
+        int newStock = currentStock - unitsForSale;
+
+        nuevoProd.setIdProducto(entdProducto.getIdProducto());
+        nuevoProd.setStock(newStock);
+
+        listProductos.add(nuevoProd);
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnGenVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenVentaActionPerformed
 
-        boolean totalAmountEmpty = txtTotalVenta.getText().equals("");
-        String nroSerie = txtNroSerie.getText();
+        boolean emptyClient = txtNombreClienteGenVenta.getText().isBlank();
+        boolean totalAmountIsEmpty = txtTotalVenta.getText().isBlank();
 
-        int ventaConfirmation = 1;
-        int saveVentaResult = 0;
-        int saveDetalleVentaResult = 0;
-
-        if (totalAmountEmpty) {
-            mensaje.totalCostInZero();
+        if (emptyClient || totalAmountIsEmpty) {
+            mensaje.invalidValuesForSale();
         } else {
-            ventaConfirmation = mensaje.ventaConfirmation();
+            this.generateVenta();
         }
-
-        if (ventaConfirmation == 0 && totalAmountEmpty == false) {
-            saveVentaResult = this.saveVenta();
-            saveDetalleVentaResult = this.saveDetalleVenta();
-        } else {
-            mensaje.operationCanceled();
-        }
-
-        if (saveVentaResult == 1 && saveDetalleVentaResult == 1) {
-            CobroForm cobroFrom = new CobroForm();
-            updateStock();
-            cleanTableProductos();
-            listProductos();
-            cleanGenerarVentasForm();
-            
-            cobroFrom.SetTotal(this.totalVenta,nroSerie );
-            cobroFrom.setVisible(true);
-            
-            
-        }
-        
-        if (saveVentaResult == 0 && saveDetalleVentaResult == 0 && ventaConfirmation == 0 && totalAmountEmpty == false) {
-            mensaje.ventaSaveFailed();
-        }
-
     }//GEN-LAST:event_btnGenVentaActionPerformed
 
     private void btnCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelar1ActionPerformed
@@ -1652,10 +1675,10 @@ public class Aplicacion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCloseActionPerformed
 
-    private void btnReloadTblClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadTblClienteActionPerformed
-        this.cleanTableClientes();
-        this.listClientes();
-    }//GEN-LAST:event_btnReloadTblClienteActionPerformed
+    private void btnRefreshSalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshSalesActionPerformed
+        this.cleanTableVentas();
+        this.listSales();
+    }//GEN-LAST:event_btnRefreshSalesActionPerformed
 
     public static void main(String args[]) {
 
@@ -1709,12 +1732,12 @@ public class Aplicacion extends javax.swing.JFrame {
     private javax.swing.JButton btnLogOut;
     private javax.swing.JButton btnMinimize;
     private javax.swing.JButton btnNewCliente;
-    private javax.swing.JButton btnNewProducto;
     private javax.swing.JButton btnNewUsuario;
-    private javax.swing.JButton btnReloadTblCliente;
+    private javax.swing.JButton btnRefreshSales;
     private javax.swing.JButton btnUpdateCliente;
     private javax.swing.JButton btnUpdateProducto;
     private javax.swing.JButton btnUpdateUsuario;
+    private javax.swing.JButton btncleanProductFormAndTable;
     private javax.swing.JComboBox<String> cbxEstadoCliente;
     private javax.swing.JComboBox<String> cbxEstadoProducto;
     private javax.swing.JComboBox<String> cbxEstadoUsuario;

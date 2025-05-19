@@ -1,13 +1,17 @@
 package Vista;
 
 import Controlador.GenerarVentaDAO;
+import Controlador.ProductoDAO;
+import Modelos.EntidadProducto;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class CobroForm extends javax.swing.JFrame {
 
     GenerarVentaDAO genVentaDAO = new GenerarVentaDAO();
+    ProductoDAO prodductoDao = new ProductoDAO();
     Mensaje mensaje = new Mensaje();
 
     int XWndowPosition;
@@ -16,21 +20,28 @@ public class CobroForm extends javax.swing.JFrame {
     float totalToPay = 0;
     String listaDePagos = "";
 
-    //====================================
-    String nroSerie = "";
+    ArrayList<EntidadProducto> listProductos;
 
-    //=====================================
     public CobroForm() {
         initComponents();
         this.setLocationRelativeTo(null);
     }
 
-    public void SetTotal(float total, String serie) {
-        totalToPay = total;
-        txtTotalToPay.setText("$" + totalToPay);
+    public void SetTotal(float total, String serie, ArrayList<EntidadProducto> listProductos) {
 
-        nroSerie = serie;
-        txtNroSerie.setText(nroSerie);
+        this.listProductos = listProductos;
+        totalToPay = total;
+        txtTotalToPay.setText(""+ totalToPay);
+        txtCambio.setText("-" + total);
+        txtNroSerie.setText(serie);
+    }
+
+    public void updateStock() {
+        for (EntidadProducto producto : this.listProductos) {
+            int idProducto = producto.getIdProducto();
+            int stock = producto.getStock();
+            prodductoDao.StockUpdate(stock, idProducto);
+        }
     }
 
     private boolean validateOtroValor() {
@@ -67,6 +78,9 @@ public class CobroForm extends javax.swing.JFrame {
         btnCobrar = new javax.swing.JButton();
         btnLimpiarCobro = new javax.swing.JButton();
         btnCancelarCobro = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txaTotales = new javax.swing.JTextArea();
         jLabel5 = new javax.swing.JLabel();
@@ -268,24 +282,41 @@ public class CobroForm extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel6.setText("$");
+
+        jLabel7.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel7.setText("$");
+
+        jLabel8.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel8.setText("$");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnLimpiarCobro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnCalcular, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnCincomil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnMil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnVeintemil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnLimpiarCobro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnCalcular, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnCincomil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnMil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnVeintemil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel7))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel8))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 13, Short.MAX_VALUE)))
-                .addGap(32, 32, 32)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addComponent(jLabel6)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnDiezmil, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnCincuentamil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -315,19 +346,24 @@ public class CobroForm extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtOtroValor))
+                    .addComponent(txtOtroValor)
+                    .addComponent(jLabel7))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(txtTotalToPay, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtTotalToPay, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jLabel6))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel4)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(txtCambio, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtCambio, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jLabel8))))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnCalcular, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
@@ -361,7 +397,7 @@ public class CobroForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -407,7 +443,7 @@ public class CobroForm extends javax.swing.JFrame {
 
         if (!txtOtroValor.getText().equals("") && validateOtroValor()) {
             pay = pay + Float.parseFloat(txtOtroValor.getText());
-            txtCambio.setText("$" + (pay - totalToPay));
+            txtCambio.setText("" + (pay - totalToPay));
             listaDePagos = listaDePagos + "\n$" + txtOtroValor.getText();
             txaTotales.setText(listaDePagos);
         } else {
@@ -418,18 +454,24 @@ public class CobroForm extends javax.swing.JFrame {
 
     private void btnCobrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCobrarActionPerformed
         int response = mensaje.ventaPayConfirmation();
-        if (response == 0) {
-            mensaje.ventaSavedSuccessfully();
-            dispose();
-        } else {
+        float cambio = Float.parseFloat(txtCambio.getText());
+
+        if (cambio < 0) {
+            mensaje.insuficentPayAmount();
+        } else if (response == 1) {
             mensaje.operationCanceled();
+        } else if (response == 0 && cambio >= 0) {
+            this.updateStock();
+            mensaje.ventaSavedSuccessfully();
+
+            dispose();
         }
     }//GEN-LAST:event_btnCobrarActionPerformed
 
     private void btnLimpiarCobroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarCobroActionPerformed
         pay = 0;
         txtOtroValor.setText("");
-        txtCambio.setText("");
+        txtCambio.setText("-" + totalToPay);
         listaDePagos = "";
         txaTotales.setText("");
     }//GEN-LAST:event_btnLimpiarCobroActionPerformed
@@ -443,27 +485,22 @@ public class CobroForm extends javax.swing.JFrame {
         if (response == 0) {
             cancelVenta = genVentaDAO.cancelSale(Integer.parseInt(txtNroSerie.getText()));
             cancelDetalleVenta = genVentaDAO.cancelSaleDetail(txtNroSerie.getText());
-        } else {
+        } else if (response == 1) {
             mensaje.operationCanceled();
         };
 
-        if (cancelVenta == 1 && cancelDetalleVenta == 1 && response == 0) {
+        if (response == 0 && (cancelVenta == 1 && cancelDetalleVenta == 1)) {
             mensaje.ventaCanceledSuccessfully();
             dispose();
-        } else {
-
-        }
-
-        if (response == 0 && cancelVenta == 0 && cancelDetalleVenta == 0) {
+        } else if (response == 0 && (cancelVenta == 0 || cancelDetalleVenta == 0)) {
             mensaje.ventaCancelFailed();
+            dispose();
         }
-
-
     }//GEN-LAST:event_btnCancelarCobroActionPerformed
 
     private void btnMilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMilActionPerformed
         pay = pay + 1000f;
-        txtCambio.setText("$" + (pay - totalToPay));
+        txtCambio.setText("" + (pay - totalToPay));
         listaDePagos = listaDePagos + "\n$1000";
         txaTotales.setText(listaDePagos);
     }//GEN-LAST:event_btnMilActionPerformed
@@ -554,6 +591,9 @@ public class CobroForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel topPanel;

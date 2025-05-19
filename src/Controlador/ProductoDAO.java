@@ -123,7 +123,7 @@ public class ProductoDAO implements CRUD {
         return productList;
     }
 
-    public void createProducto(Map formData) {
+    public int createProducto(Map formData) {
 
         boolean queryResult = false;
         int resp = this.message.productoCreateConfirmation();
@@ -137,6 +137,8 @@ public class ProductoDAO implements CRUD {
         if (queryResult) {
             message.productoCreateSuccessfully();
         }
+        
+        return resp;
 
     }
 
