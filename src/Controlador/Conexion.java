@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 public class Conexion {
 
     Connection con;
-    String url = "jdbc:mysql://localhost:3306/stockbox_desarrollo";
+    String url = "jdbc:mysql://localhost:3306/stockbox_produccion";
     String user = "root";
     String password = "";
     
